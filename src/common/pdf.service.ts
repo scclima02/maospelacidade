@@ -11,10 +11,6 @@ export interface DadosCertificado {
   urlValidacao: string;
 }
 
-export interface LinhaTabela {
-  colunas: string[];
-}
-
 export interface TabelaPdf {
   titulo: string;
   cabecalho: string[];

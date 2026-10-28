@@ -43,7 +43,7 @@ body { background: var(--bs-body-bg); }
 .text-bg-success { background-color: #2e7d5b !important; }
 
 /* Cabeçalho institucional */
-.topo .navbar {
+.navbar.topo {
   background: linear-gradient(90deg, #163e6e 0%, #1d4e89 60%, #2e7d5b 100%);
   box-shadow: 0 2px 6px rgba(0, 0, 0, .15);
 }

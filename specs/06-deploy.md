@@ -8,7 +8,8 @@
 | `APP_URL` | sim em produção | URL pública (links dos e-mails), ex. `https://svgmunicipal.vercel.app` |
 | `SMTP_HOST`, `SMTP_PORT`, `SMTP_USER`, `SMTP_PASS`, `SMTP_FROM` | não | E-mail real. Sem SMTP, os e-mails são registrados como `ignorado` |
 | `CRON_SECRET` | não | Protege `/api/cron/retencao` (a Vercel envia no header Authorization) |
-| `SEED_DEMO` | não | `1` para carregar usuários e dados de demonstração no `db:seed` |
+| `ADMIN_EMAIL`, `ADMIN_SENHA` | não | Administrador criado pelo `db:seed` (padrão `admin@prefeitura.gov.br` / `Admin@123`). **Defina uma senha própria em produção** |
+| `SEED_DEMO` | não | `1` para carregar também gestor, voluntários e demandas de demonstração no `db:seed` |
 
 ## Local
 ```
@@ -17,7 +18,7 @@ cp .env.example .env     # preencher DATABASE_URL e JWT_SECRET
 npm run db:migrate       # cria tabelas (db/schema.sql) e catálogos iniciais
 npm run db:seed          # dados de demonstração (usuários abaixo)
 npm run start:dev        # http://localhost:3000
-npm test                 # testes unitários + e2e (banco em memória)
+npm test                 # testes unitários + fluxo completo (Postgres embutido, sem Neon)
 ```
 
 ## Neon
