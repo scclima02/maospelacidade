@@ -1,0 +1,47 @@
+/* Mãos pela Cidade — telas de autenticação (painel de marca + formulário em vidro). */
+
+.auth { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 1.25rem; max-width: 1080px; margin: 0 auto; min-height: calc(100svh - var(--nav-h) - 10rem); align-items: stretch; }
+.auth.amplo { grid-template-columns: minmax(250px, .46fr) minmax(0, 1.54fr); max-width: 1180px; align-items: start; }
+.auth.estreito { grid-template-columns: minmax(0, 560px); justify-content: center; min-height: 0; }
+
+.auth-marca {
+  position: relative; overflow: hidden; border-radius: 34px; padding: clamp(1.5rem, 3vw, 2.4rem); color: #fff; isolation: isolate;
+  display: flex; flex-direction: column; justify-content: space-between; gap: 2rem;
+  background: radial-gradient(120% 90% at 0% 0%, rgba(255, 122, 69, .95) 0, transparent 56%), radial-gradient(110% 90% at 100% 100%, rgba(47, 111, 237, .95) 0, transparent 62%), linear-gradient(160deg, #16306b, #0d1b45);
+  box-shadow: 0 30px 70px -28px rgba(13, 27, 69, .7);
+}
+.auth.amplo .auth-marca { position: sticky; top: calc(var(--nav-h) + 2rem); }
+.auth-marca .marca-topo { display: flex; flex-direction: column; align-items: flex-start; gap: .9rem; }
+.auth-marca .marca-topo img { width: 62px; height: 62px; border-radius: 19px; box-shadow: 0 14px 30px -10px rgba(0, 0, 0, .5); animation: batida 3s ease-in-out infinite; }
+.auth-marca h2 { text-wrap: balance; font-size: clamp(1.4rem, 1.1rem + 1vw, 1.9rem); margin: 0; color: #fff; letter-spacing: -.035em; line-height: 1.05; }
+.auth-marca .sub { font-size: .7rem; font-weight: 800; letter-spacing: .14em; text-transform: uppercase; opacity: .85; }
+.auth-marca .frase { font-size: clamp(1.3rem, 1rem + 1.4vw, 2rem); line-height: 1.18; letter-spacing: -.03em; font-weight: 800; margin: 0; text-wrap: balance; }
+.auth-marca .assina { font-size: .82rem; font-weight: 600; opacity: .88; margin: 0; display: flex; align-items: center; gap: .5rem; }
+.auth-hearts { position: absolute; inset: 0; z-index: -1; pointer-events: none; overflow: hidden; }
+.auth-hearts i { position: absolute; bottom: -30px; left: var(--x); font-size: var(--s, 1.4rem); color: rgba(255, 255, 255, .5); animation: coracao var(--d, 9s) ease-in infinite; animation-delay: var(--atraso, 0s); opacity: 0; }
+.auth-hearts i:nth-child(odd) { color: rgba(255, 190, 150, .6); }
+@keyframes coracao { 0% { transform: translateY(0) scale(.6) rotate(0); opacity: 0; } 15% { opacity: .85; } 100% { transform: translateY(-420px) scale(1.25) rotate(20deg); opacity: 0; } }
+
+.auth-form { align-self: center; width: 100%; }
+.auth.amplo .auth-form { align-self: start; }
+.auth-form .card { border-radius: 32px; }
+.auth-form .card-body { padding: clamp(1.4rem, 3.2vw, 2.5rem); }
+.auth-form h1 { font-size: clamp(1.6rem, 1.2rem + 1.4vw, 2.2rem); letter-spacing: -.035em; margin-bottom: .35rem; }
+.auth-form .intro { color: var(--texto-suave); margin-bottom: 1.6rem; }
+.auth-form .btn-primary.w-100 { min-height: 52px; font-size: 1.02rem; }
+.auth-links { display: flex; flex-wrap: wrap; justify-content: space-between; gap: .5rem 1rem; margin-top: 1.4rem; font-size: .9rem; font-weight: 600; }
+
+@media (max-width: 991.98px) {
+  .auth, .auth.amplo { grid-template-columns: 1fr; min-height: 0; gap: 1rem; }
+  .auth.amplo .auth-marca { position: relative; top: 0; }
+  .auth-marca { flex-direction: row; align-items: center; border-radius: 26px; padding: 1rem 1.1rem; gap: 1rem; }
+  .auth-marca .marca-topo { flex-direction: row; align-items: center; gap: .8rem; }
+  .auth-marca .marca-topo img { width: 48px; height: 48px; border-radius: 15px; }
+  .auth-marca .frase, .auth-marca .auth-hearts { display: none; }
+  .auth-marca .assina { font-size: .72rem; max-width: 18ch; text-align: right; margin-left: auto; line-height: 1.25; }
+  .auth-marca .assina i { display: none; }
+}
+@media (max-width: 575.98px) {
+  .auth-marca .assina { display: none; }
+  .auth-form .card { border-radius: 26px; }
+}

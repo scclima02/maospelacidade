@@ -70,7 +70,7 @@ export class PdfService {
 
     this.centralizar(page, negrito, d.organizacao.toUpperCase(), 505, 16, AZUL);
     this.centralizar(page, negrito, 'CERTIFICADO DE PARTICIPAÇÃO', 450, 30, AZUL);
-    this.centralizar(page, normal, 'Programa de Voluntariado Municipal', 425, 12, CINZA);
+    this.centralizar(page, normal, 'Mãos pela Cidade · Voluntariado Municipal', 425, 12, CINZA);
 
     this.centralizar(page, normal, 'Certificamos que', 370, 14);
     this.centralizar(page, negrito, d.nome, 335, 26);

@@ -39,6 +39,18 @@ export class PublicoController {
     };
   }
 
+  /** Números agregados e sem identificação, exibidos na página inicial. */
+  @Get('publico/estatisticas')
+  async estatisticas() {
+    const [r] = await this.db.query(
+      `SELECT (SELECT COUNT(*)::int FROM usuario WHERE perfil = 'voluntario' AND situacao = 'ativo') AS voluntarios,
+              (SELECT COUNT(*)::int FROM demanda WHERE situacao = 'concluida') AS acoes,
+              (SELECT COALESCE(SUM(horas_realizadas), 0)::float8 FROM participacao WHERE situacao = 'compareceu') AS horas,
+              (SELECT COUNT(*)::int FROM area_atuacao WHERE ativo) AS areas`,
+    );
+    return { ...r, horas: Math.round(r.horas) };
+  }
+
   @Get('catalogos/areas')
   areas() {
     return this.db.query('SELECT id_area AS id, nome FROM area_atuacao WHERE ativo ORDER BY nome');

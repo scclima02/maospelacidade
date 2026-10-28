@@ -25,6 +25,7 @@ Prefixo `/api`. JSON UTF-8. Autenticação por cookie `sessao` (httpOnly); o fro
 | Rota | Resposta |
 |---|---|
 | GET `/publico/config` | `{nomeOrganizacao, termoVersao, termo:{titulo, finalidade, dadosColetados:[str], quemAcessa:[str], retencao, texto}}` |
+| GET `/publico/estatisticas` | `{voluntarios, acoes, horas, areas}` agregados sem identificação (página inicial) |
 | GET `/catalogos/areas` | `[{id, nome}]` só ativas |
 | GET `/catalogos/regioes` | `[{id, nome}]` só ativas |
 | GET `/certificados/validar/:codigo` | `{valido:true, nome, acao, data, horas}` ou 404 |

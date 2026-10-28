@@ -6,13 +6,14 @@ import {
   aoEnviar, ErroForm, executar, lerForm, mensagensDe, fmtData, fmtHoras, fmtNumero, fmtTaxa, PERFIS,
 } from './ui.js';
 import { SENHA_FORTE, DICA_SENHA } from './componentes.js';
+import { ajustarGraficos } from './efeitos.js';
 
-const PALETA = ['#1d4e89', '#2e7d5b', '#e0a526', '#c0504d', '#7a6ba8', '#3d9bb0', '#8c6d46', '#5b6877'];
+const PALETA = ['#ff7a45', '#2f6fed', '#22c7b8', '#ff5e62', '#8b5cf6', '#f5b83d', '#1456b8', '#94a3b8'];
 
 const opcoes = (itens, selecionado = '') => itens.map((i) => html`<option value="${i.id}" ${String(selecionado) === String(i.id) ? raw('selected') : ''}>${i.nome}</option>`);
 
-const indicador = (valor, rotulo, cls = '') => html`<div class="col-6 col-md-4 col-xl-2"><div class="card indicador ${cls} shadow-sm h-100"><div class="card-body">
-  <div class="valor">${valor}</div><div class="rotulo">${rotulo}</div></div></div></div>`;
+const indicador = (valor, rotulo, cls = '', icone = 'bi-stars') => html`<div class="col-6 col-md-4 col-xl-2"><div class="card indicador ${cls} h-100"><div class="card-body">
+  <span class="ico" aria-hidden="true"><i class="bi ${icone}"></i></span><div class="valor">${valor}</div><div class="rotulo">${rotulo}</div></div></div></div>`;
 
 const nomeMes = (aaaamm) => {
   const [a, m] = String(aaaamm).split('-');
@@ -39,6 +40,10 @@ export async function telaPainel(ctx) {
   let graficos = [];
   const destruir = () => { graficos.forEach((g) => g.destroy()); graficos = []; };
   ctx.limpeza.push(destruir);
+  // Gráficos acompanham o tema claro/escuro.
+  const aoTrocarTema = () => carregar();
+  document.addEventListener('tema', aoTrocarTema);
+  ctx.limpeza.push(() => document.removeEventListener('tema', aoTrocarTema));
 
   async function carregar() {
     destruir();
@@ -51,12 +56,12 @@ export async function telaPainel(ctx) {
       return;
     }
     mount(area, html`<div class="row g-3 mb-4">
-        ${indicador(fmtNumero(r.voluntariosAtivos), 'Voluntários ativos')}
-        ${indicador(fmtNumero(r.demandasAbertas), 'Demandas abertas', 'verde')}
-        ${indicador(fmtNumero(r.demandasConcluidas), 'Demandas concluídas')}
-        ${indicador(fmtNumero(r.participacoes), 'Participações', 'verde')}
-        ${indicador(fmtHoras(r.horas), 'Horas voluntariadas')}
-        ${indicador(fmtTaxa(r.taxaComparecimento), 'Taxa de comparecimento', 'verde')}
+        ${indicador(fmtNumero(r.voluntariosAtivos), 'Voluntários ativos', '', 'bi-people-fill')}
+        ${indicador(fmtNumero(r.demandasAbertas), 'Demandas abertas', 'verde', 'bi-megaphone-fill')}
+        ${indicador(fmtNumero(r.demandasConcluidas), 'Demandas concluídas', '', 'bi-check2-circle')}
+        ${indicador(fmtNumero(r.participacoes), 'Participações', 'verde', 'bi-hand-thumbs-up-fill')}
+        ${indicador(fmtHoras(r.horas), 'Horas voluntariadas', '', 'bi-clock-history')}
+        ${indicador(fmtTaxa(r.taxaComparecimento), 'Taxa de comparecimento', 'verde', 'bi-graph-up-arrow')}
       </div>
       <div class="row g-3">
         <div class="col-12 col-lg-7"><div class="card shadow-sm h-100"><div class="card-body">
@@ -73,13 +78,14 @@ export async function telaPainel(ctx) {
       area.insertAdjacentHTML('beforeend', alerta('warning', 'Não foi possível carregar a biblioteca de gráficos. Os indicadores acima continuam válidos.').s);
       return;
     }
+    ajustarGraficos();
     const meses = r.demandasPorMes || [];
     const areas = r.voluntariosPorArea || [];
     if (meses.length) {
       graficos.push(new Chart(area.querySelector('#g-meses'), {
         type: 'bar',
-        data: { labels: meses.map((m) => nomeMes(m.mes)), datasets: [{ label: 'Demandas', data: meses.map((m) => m.total), backgroundColor: PALETA[0], borderRadius: 4 }] },
-        options: { maintainAspectRatio: false, plugins: { legend: { display: false } }, scales: { y: { beginAtZero: true, ticks: { precision: 0 } } } },
+        data: { labels: meses.map((m) => nomeMes(m.mes)), datasets: [{ label: 'Demandas', data: meses.map((m) => m.total), backgroundColor: PALETA[0], borderRadius: 10, borderSkipped: false, maxBarThickness: 46 }] },
+        options: { maintainAspectRatio: false, plugins: { legend: { display: false } }, scales: { x: { grid: { display: false } }, y: { beginAtZero: true, ticks: { precision: 0 } } } },
       }));
     } else {
       mount(area.querySelector('#g-meses').parentElement, vazio('Sem demandas no período.', 'bi-bar-chart'));
@@ -87,8 +93,8 @@ export async function telaPainel(ctx) {
     if (areas.length) {
       graficos.push(new Chart(area.querySelector('#g-areas'), {
         type: 'doughnut',
-        data: { labels: areas.map((a) => a.area), datasets: [{ data: areas.map((a) => a.total), backgroundColor: areas.map((_, i) => PALETA[i % PALETA.length]) }] },
-        options: { maintainAspectRatio: false, plugins: { legend: { position: 'bottom' } } },
+        data: { labels: areas.map((a) => a.area), datasets: [{ data: areas.map((a) => a.total), backgroundColor: areas.map((_, i) => PALETA[i % PALETA.length]), borderWidth: 0, hoverOffset: 8 }] },
+        options: { maintainAspectRatio: false, cutout: '66%', plugins: { legend: { position: 'bottom', labels: { usePointStyle: true, boxWidth: 8 } } } },
       }));
     } else {
       mount(area.querySelector('#g-areas').parentElement, vazio('Sem voluntários cadastrados.', 'bi-pie-chart'));
@@ -130,10 +136,10 @@ export async function telaRelatorios(ctx) {
       const r = await api.get(`/admin/relatorios/engajamento${qs(filtros)}`);
       const t = r.totais || {};
       mount(saida, html`<div class="row g-3 mb-4">
-          ${indicador(fmtNumero(t.demandas), 'Demandas no período')}
-          ${indicador(fmtNumero(t.presencas), 'Presenças', 'verde')}
-          ${indicador(fmtNumero(t.faltas), 'Faltas')}
-          ${indicador(fmtHoras(t.horas), 'Horas voluntariadas', 'verde')}
+          ${indicador(fmtNumero(t.demandas), 'Demandas no período', '', 'bi-clipboard2-heart-fill')}
+          ${indicador(fmtNumero(t.presencas), 'Presenças', 'verde', 'bi-person-check-fill')}
+          ${indicador(fmtNumero(t.faltas), 'Faltas', '', 'bi-person-x-fill')}
+          ${indicador(fmtHoras(t.horas), 'Horas voluntariadas', 'verde', 'bi-clock-history')}
         </div>
         <h2 class="h5">Voluntários por área e região</h2>
         ${r.porAreaRegiao.length ? html`<div class="card shadow-sm mb-4"><div class="table-responsive"><table class="table table-sm table-hover tabela-compacta mb-0">

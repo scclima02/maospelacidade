@@ -7,30 +7,52 @@ import {
 import {
   blocoTermo, camposVoluntario, iniciarDisponibilidades, coletarVoluntario, SENHA_FORTE, DICA_SENHA,
 } from './componentes.js';
+import { NOME_PRODUTO, TAGLINE } from './cabecalho.js';
+import { coracoesFlutuantes } from './landing.js';
 
-const cartaoCentral = (conteudo, largura = 'col-lg-5') => html`<div class="row justify-content-center">
-  <div class="col-12 col-md-9 ${largura}"><div class="card shadow-sm"><div class="card-body p-4">${conteudo}</div></div></div>
+// Painel de marca (aurora escura, corações flutuando) ao lado do formulário em vidro.
+const painelMarca = (frase) => html`<aside class="auth-marca" aria-label="${NOME_PRODUTO}">
+  <div class="auth-hearts" aria-hidden="true">${coracoesFlutuantes}</div>
+  <div class="marca-topo">
+    <img src="img/logo.svg" alt="" width="62" height="62">
+    <div><span class="sub">${TAGLINE}</span><h2>${NOME_PRODUTO}</h2></div>
+  </div>
+  <p class="frase">${frase}</p>
+  <p class="assina"><i class="bi bi-building-fill" aria-hidden="true"></i> Uma iniciativa da ${state.config.nomeOrganizacao}</p>
+</aside>`;
+
+const FRASE = 'Juntos, mudamos a cidade com as próprias mãos.';
+
+const layoutAuth = (conteudo, { modo = '', frase = FRASE } = {}) => html`<div class="auth ${modo}">
+  ${painelMarca(frase)}
+  <div class="auth-form"><div class="card"><div class="card-body">${conteudo}</div></div></div>
+</div>`;
+
+const cartaoSimples = (conteudo) => html`<div class="auth estreito">
+  <div class="auth-form"><div class="card"><div class="card-body">${conteudo}</div></div></div>
 </div>`;
 
 export function telaLogin({ el }) {
-  mount(el, cartaoCentral(html`
-    <h1 class="h4 mb-1" tabindex="-1">Entrar</h1>
-    <p class="text-muted">Acesse com seu e-mail e senha.</p>
+  mount(el, layoutAuth(html`
+    <h1 tabindex="-1">Que bom ter você de volta</h1>
+    <p class="intro">Entre com seu e-mail e senha para ver as ações da sua cidade.</p>
     <form novalidate>
       <div data-erros></div>
       <div class="mb-3">
         <label class="form-label" for="l-email">E-mail</label>
-        <input class="form-control" type="email" id="l-email" name="email" required autocomplete="username">
-        <div class="invalid-feedback">Informe seu e-mail.</div>
+        <div class="campo"><i class="bi bi-envelope" aria-hidden="true"></i>
+          <input class="form-control" type="email" id="l-email" name="email" required autocomplete="username" placeholder="voce@exemplo.com">
+          <div class="invalid-feedback">Informe seu e-mail.</div></div>
       </div>
-      <div class="mb-3">
+      <div class="mb-4">
         <label class="form-label" for="l-senha">Senha</label>
-        <input class="form-control" type="password" id="l-senha" name="senha" required autocomplete="current-password">
-        <div class="invalid-feedback">Informe sua senha.</div>
+        <div class="campo"><i class="bi bi-lock" aria-hidden="true"></i>
+          <input class="form-control" type="password" id="l-senha" name="senha" required autocomplete="current-password" placeholder="Sua senha">
+          <div class="invalid-feedback">Informe sua senha.</div></div>
       </div>
-      <button class="btn btn-primary w-100" type="submit">Entrar</button>
+      <button class="btn btn-primary w-100" type="submit">Entrar <i class="bi bi-arrow-right" aria-hidden="true"></i></button>
     </form>
-    <div class="d-flex flex-wrap justify-content-between gap-2 mt-3 small">
+    <div class="auth-links">
       <a href="#/recuperar-senha">Esqueci minha senha</a>
       <a href="#/cadastro">Quero ser voluntário</a>
     </div>`));
@@ -49,9 +71,9 @@ export async function telaCadastro({ el }) {
   const { areas, regioes } = await carregarCatalogos(true);
   const termo = state.config.termo;
 
-  mount(el, cartaoCentral(html`
-    <h1 class="h4 mb-1" tabindex="-1">Cadastro de voluntário</h1>
-    <p class="text-muted">Informe seus dados e sua disponibilidade para receber oportunidades compatíveis.</p>
+  mount(el, layoutAuth(html`
+    <h1 tabindex="-1">Cadastro de voluntário</h1>
+    <p class="intro">Informe seus dados e sua disponibilidade para receber oportunidades compatíveis.</p>
     <form novalidate>
       <div data-erros></div>
       ${camposVoluntario({ areas, regioes })}
@@ -82,7 +104,7 @@ export async function telaCadastro({ el }) {
 
       <button class="btn btn-primary mt-4" type="submit">Concluir cadastro</button>
       <a class="btn btn-link mt-4" href="#/login">Já tenho conta</a>
-    </form>`, 'col-lg-8'));
+    </form>`, { modo: 'amplo', frase: 'Cadastre-se e receba ações que combinam com você.' }));
 
   aoEnviar(el.querySelector('form'), async (form) => {
     const { dados, erros } = coletarVoluntario(form);
@@ -100,20 +122,21 @@ export async function telaCadastro({ el }) {
 }
 
 export function telaRecuperarSenha({ el }) {
-  mount(el, cartaoCentral(html`
-    <h1 class="h4 mb-1" tabindex="-1">Recuperar senha</h1>
-    <p class="text-muted">Informe o e-mail cadastrado. Enviaremos um link para você criar uma nova senha.</p>
+  mount(el, layoutAuth(html`
+    <h1 tabindex="-1">Recuperar senha</h1>
+    <p class="intro">Informe o e-mail cadastrado. Enviaremos um link para você criar uma nova senha.</p>
     <div id="resultado"></div>
     <form novalidate>
       <div data-erros></div>
       <div class="mb-3">
         <label class="form-label" for="r-email">E-mail</label>
-        <input class="form-control" type="email" id="r-email" name="email" required autocomplete="email">
-        <div class="invalid-feedback">Informe um e-mail válido.</div>
+        <div class="campo"><i class="bi bi-envelope" aria-hidden="true"></i>
+          <input class="form-control" type="email" id="r-email" name="email" required autocomplete="email" placeholder="voce@exemplo.com">
+          <div class="invalid-feedback">Informe um e-mail válido.</div></div>
       </div>
       <button class="btn btn-primary w-100" type="submit">Enviar link de redefinição</button>
     </form>
-    <p class="mt-3 mb-0 small"><a href="#/login">Voltar ao login</a></p>`));
+    <div class="auth-links"><a href="#/login"><i class="bi bi-arrow-left" aria-hidden="true"></i> Voltar ao login</a></div>`));
 
   const form = el.querySelector('form');
   aoEnviar(form, async () => {
@@ -127,15 +150,15 @@ export function telaRecuperarSenha({ el }) {
 export function telaRedefinirSenha({ el, query }) {
   const token = query.token;
   if (!token) {
-    mount(el, cartaoCentral(html`
-      <h1 class="h4" tabindex="-1">Redefinir senha</h1>
+    mount(el, layoutAuth(html`
+      <h1 tabindex="-1">Redefinir senha</h1>
       ${alerta('danger', 'Link inválido: o código de redefinição não foi informado.')}
       <a href="#/recuperar-senha">Solicitar um novo link</a>`));
     return;
   }
-  mount(el, cartaoCentral(html`
-    <h1 class="h4 mb-1" tabindex="-1">Definir nova senha</h1>
-    <p class="text-muted">Escolha uma nova senha para sua conta.</p>
+  mount(el, layoutAuth(html`
+    <h1 tabindex="-1">Definir nova senha</h1>
+    <p class="intro">Escolha uma nova senha para sua conta.</p>
     <div id="resultado"></div>
     <form novalidate>
       <div data-erros></div>
@@ -168,9 +191,9 @@ export function telaRedefinirSenha({ el, query }) {
 }
 
 export async function telaValidarCertificado({ el, query }) {
-  mount(el, cartaoCentral(html`
-    <h1 class="h4 mb-1" tabindex="-1">Validar certificado</h1>
-    <p class="text-muted">Digite o código de validação impresso no certificado de participação.</p>
+  mount(el, cartaoSimples(html`
+    <h1 tabindex="-1">Validar certificado</h1>
+    <p class="intro">Digite o código de validação impresso no certificado de participação.</p>
     <form novalidate class="mb-3">
       <div class="input-group">
         <input class="form-control" id="c-codigo" name="codigo" required placeholder="VOL-XXXX-XXXX-XXXX" aria-label="Código de validação" autocomplete="off" value="${query.codigo || ''}">
@@ -178,7 +201,7 @@ export async function telaValidarCertificado({ el, query }) {
       </div>
       <div class="invalid-feedback">Informe o código.</div>
     </form>
-    <div id="resultado" aria-live="polite"></div>`, 'col-lg-6'));
+    <div id="resultado" aria-live="polite"></div>`));
 
   const form = el.querySelector('form');
   const saida = el.querySelector('#resultado');

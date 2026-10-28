@@ -50,7 +50,7 @@ async function rotear() {
   const alvo = resolver(caminho);
 
   // Raiz ou rota desconhecida: vai para a página inicial do perfil.
-  if (!alvo) return navegar(perfil ? homePara(perfil) : '#/login');
+  if (!alvo) return navegar(perfil ? homePara(perfil) : '#/');
   const { rota, params } = alvo;
 
   if (!rota.publica && !perfil) return navegar('#/login');
@@ -84,7 +84,7 @@ async function rotear() {
   if (minha !== versao) return;
 
   const h1 = el.querySelector('h1');
-  document.title = `${h1 ? `${h1.textContent.trim()} — ` : ''}${state.config.nomeOrganizacao}`;
+  document.title = rota.titulo || `${h1 ? `${h1.textContent.trim()} — ` : ''}Mãos pela Cidade`;
   window.scrollTo(0, 0);
   if (h1) h1.focus({ preventScroll: true });
 }

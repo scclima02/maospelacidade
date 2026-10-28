@@ -1,0 +1,25 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128" role="img" aria-label="Mãos pela Cidade">
+  <defs>
+    <linearGradient id="mpc-coracao" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#FF9A3D"/>
+      <stop offset="1" stop-color="#FF5E62"/>
+    </linearGradient>
+    <linearGradient id="mpc-mao" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#2F8BEA"/>
+      <stop offset="1" stop-color="#1456B8"/>
+    </linearGradient>
+  </defs>
+  <rect width="128" height="128" rx="30" fill="#FFF4E6"/>
+  <rect x="1.5" y="1.5" width="125" height="125" rx="28.5" fill="none" stroke="#F4DDC2" stroke-width="3"/>
+  <!-- coração -->
+  <g transform="translate(64 60) scale(1.22) translate(-64 -60)">
+    <path fill="url(#mpc-coracao)" d="M64 82C39 64 35 43 50 36c7-3 14 2 14 8 0-6 7-11 14-8 15 7 11 28-14 46z"/>
+    <path fill="#fff" opacity=".38" d="M47 45c1-4 5-6 9-5-5 1-8 4-9 9z"/>
+  </g>
+  <!-- mão esquerda -->
+  <path fill="url(#mpc-mao)" d="M64 112C32 112 11 93 11 63c0-6 8-8 12-3 7 9 17 16 29 19 7 2 12 6 12 13z"/>
+  <path d="M23 72c6 7 14 12 24 15M17 83c7 8 17 14 29 16" fill="none" stroke="#fff" stroke-opacity=".38" stroke-width="2.4" stroke-linecap="round"/>
+  <!-- mão direita -->
+  <path fill="url(#mpc-mao)" d="M64 112c32 0 53-19 53-49 0-6-8-8-12-3-7 9-17 16-29 19-7 2-12 6-12 13z"/>
+  <path d="M105 72c-6 7-14 12-24 15M111 83c-7 8-17 14-29 16" fill="none" stroke="#fff" stroke-opacity=".38" stroke-width="2.4" stroke-linecap="round"/>
+</svg>

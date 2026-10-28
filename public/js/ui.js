@@ -104,32 +104,65 @@ const SITUACOES = {
 
 export function badge(situacao) {
   const [cor, rotulo] = SITUACOES[situacao] || ['secondary', situacao];
-  return html`<span class="badge text-bg-${cor}">${rotulo}</span>`;
+  return html`<span class="pill pill-${cor}"><span class="ponto" aria-hidden="true"></span>${rotulo}</span>`;
 }
 
 // ---------- Blocos de interface ----------
+// Esqueleto de carregamento (a mensagem fica disponível para leitores de tela).
 export const spinner = (msg = 'Carregando…') =>
-  html`<div class="text-center text-muted py-5"><div class="spinner-border" role="status" aria-hidden="true"></div><p class="mt-2 mb-0">${msg}</p></div>`;
+  html`<div class="sk-bloco" role="status"><span class="visually-hidden">${msg}</span>
+    <div class="sk sk-titulo"></div>
+    <div class="row g-3">
+      <div class="col-12 col-md-6 col-xl-4"><div class="sk sk-card"></div></div>
+      <div class="col-12 col-md-6 col-xl-4 d-none d-md-block"><div class="sk sk-card"></div></div>
+      <div class="col-xl-4 d-none d-xl-block"><div class="sk sk-card"></div></div>
+    </div></div>`;
 
+// Estado vazio ilustrado.
 export const vazio = (msg, icone = 'bi-inbox') =>
-  html`<div class="text-center text-muted py-5"><i class="bi ${icone} fs-1" aria-hidden="true"></i><p class="mt-2 mb-0">${msg}</p></div>`;
+  html`<div class="vazio"><div class="vazio-ilustra">
+    <svg viewBox="0 0 148 124" aria-hidden="true">
+      <defs><linearGradient id="vz" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#ff9a3d" stop-opacity=".35"/><stop offset="1" stop-color="#2f6fed" stop-opacity=".28"/></linearGradient></defs>
+      <ellipse cx="74" cy="64" rx="60" ry="52" fill="url(#vz)"/>
+      <circle cx="74" cy="64" r="38" fill="none" stroke="currentColor" stroke-opacity=".18" stroke-width="2" stroke-dasharray="4 6"/>
+      <path d="M20 26c3-5 9-3 9 2 0-5 6-7 9-2 3 6-5 11-9 15-4-4-12-9-9-15z" fill="#ff5e62" opacity=".75"/>
+      <path d="M118 88c2-4 7-2 7 2 0-4 5-5 7-2 2 5-4 9-7 12-3-3-9-7-7-12z" fill="#2f6fed" opacity=".6"/>
+      <circle cx="126" cy="30" r="4" fill="#22c7b8"/><circle cx="16" cy="92" r="3" fill="#ff9a3d"/>
+    </svg>
+    <i class="bi ${icone}" aria-hidden="true"></i></div>
+    <p>${msg}</p></div>`;
 
 export const alerta = (tipo, msg) => html`<div class="alert alert-${tipo}" role="alert">${msg}</div>`;
 
-export const cabecalhoPagina = (titulo, acoes = '') =>
-  html`<div class="d-flex flex-wrap justify-content-between align-items-center gap-2 mb-3">
-    <h1 class="h3 mb-0" tabindex="-1">${titulo}</h1>
-    <div class="d-flex flex-wrap gap-2">${acoes}</div>
+const SUBTITULOS = {
+  Oportunidades: 'Ações compatíveis com o seu perfil, prontas para você responder.',
+  Notificações: 'Avisos sobre oportunidades, seleções e mudanças nas ações.',
+  'Meu histórico': 'Suas ações, horas voluntariadas e certificados.',
+  'Meu perfil': 'Seus dados, áreas de interesse, disponibilidade e privacidade.',
+  Demandas: 'Ações da cidade que precisam de voluntários.',
+  'Painel de indicadores': 'Um retrato do engajamento da cidade, em tempo real.',
+  'Relatório de engajamento': 'Voluntários, horas e presenças por área, região e período.',
+  'Usuários e perfis': 'Quem acessa o sistema e com qual perfil.',
+  'Áreas e regiões': 'Os cadastros que alimentam perfis, demandas e o cruzamento.',
+  Configurações: 'Pontuação do cruzamento, retenção de dados e identidade da organização.',
+};
+
+export const cabecalhoPagina = (titulo, acoes = '', subtitulo = SUBTITULOS[titulo]) =>
+  html`<div class="pag-cab">
+    <div><h1 tabindex="-1">${titulo}</h1>${subtitulo ? html`<p>${subtitulo}</p>` : ''}</div>
+    <div class="acoes">${acoes}</div>
   </div>`;
 
 // ---------- Toasts ----------
+const ICONES_TOAST = { success: 'bi-check-circle-fill', danger: 'bi-exclamation-octagon-fill', warning: 'bi-exclamation-triangle-fill', info: 'bi-info-circle-fill' };
+
 export function toast(msg, tipo = 'success') {
   const area = document.getElementById('toasts');
   const el = document.createElement('div');
   el.className = `toast align-items-center text-bg-${tipo} border-0`;
   el.setAttribute('role', tipo === 'danger' ? 'alert' : 'status');
   const fechar = tipo === 'warning' ? 'btn-close' : 'btn-close btn-close-white';
-  mount(el, html`<div class="d-flex"><div class="toast-body">${msg}</div><button type="button" class="${fechar} me-2 m-auto" data-bs-dismiss="toast" aria-label="Fechar"></button></div>`);
+  mount(el, html`<div class="d-flex"><div class="toast-body"><i class="bi ${ICONES_TOAST[tipo] || ICONES_TOAST.info}" aria-hidden="true"></i><span>${msg}</span></div><button type="button" class="${fechar} me-2 m-auto" data-bs-dismiss="toast" aria-label="Fechar"></button></div>`);
   area.append(el);
   const t = new bootstrap.Toast(el, { delay: tipo === 'danger' ? 7000 : 4000 });
   el.addEventListener('hidden.bs.toast', () => el.remove());

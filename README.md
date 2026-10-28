@@ -1,4 +1,6 @@
-# Sistema de Gestão de Voluntariado Municipal
+# Mãos pela Cidade
+
+*Sistema de Gestão de Voluntariado Municipal.*
 
 Projeto Tecnológico em Desenvolvimento de Sistemas (ULBRA EAD): aplicação web para mobilizar
 voluntários em ações pontuais de uma prefeitura. O cidadão se cadastra com áreas de interesse,

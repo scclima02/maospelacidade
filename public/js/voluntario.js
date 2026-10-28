@@ -197,14 +197,14 @@ export async function telaNotificacoes(ctx) {
 // ---------- UC08 e UC09: histórico e certificado ----------
 export async function telaHistorico(ctx) {
   const h = await api.get('/voluntarios/me/historico');
-  const indicador = (valor, rotulo, cls = '') => html`<div class="col-6 col-md-4"><div class="card indicador ${cls} shadow-sm"><div class="card-body">
+  const indicador = (valor, rotulo, cls = '', icone = 'bi-stars') => html`<div class="col-6 col-md-4"><div class="card indicador ${cls}"><div class="card-body"><span class="ico" aria-hidden="true"><i class="bi ${icone}"></i></span>
     <div class="valor">${valor}</div><div class="rotulo">${rotulo}</div></div></div></div>`;
 
   mount(ctx.el, html`${cabecalhoPagina('Meu histórico')}
     <div class="row g-3 mb-4">
-      ${indicador(fmtNumero(h.totais.acoes), 'Ações realizadas')}
-      ${indicador(fmtHoras(h.totais.horas), 'Horas voluntariadas', 'verde')}
-      ${indicador(fmtNumero(h.totais.faltas), 'Faltas registradas')}
+      ${indicador(fmtNumero(h.totais.acoes), 'Ações realizadas', '', 'bi-hand-thumbs-up-fill')}
+      ${indicador(fmtHoras(h.totais.horas), 'Horas voluntariadas', 'verde', 'bi-clock-history')}
+      ${indicador(fmtNumero(h.totais.faltas), 'Faltas registradas', '', 'bi-person-x-fill')}
     </div>
     ${h.itens.length ? html`<div class="card shadow-sm"><div class="table-responsive">
       <table class="table table-hover tabela-compacta mb-0">

@@ -2,6 +2,8 @@ import { api, definirAoNaoAutorizado } from './api.js';
 import { state } from './state.js';
 import { definirRotas, iniciarRouter, navegar } from './router.js';
 import { renderCabecalho, renderRodape, atualizarBadge } from './cabecalho.js';
+import { iniciarEfeitos } from './efeitos.js';
+import { telaLanding } from './landing.js';
 import { toast } from './ui.js';
 import {
   telaLogin, telaCadastro, telaRecuperarSenha, telaRedefinirSenha, telaValidarCertificado,
@@ -20,6 +22,7 @@ const A = ['administrador'];
 const GA = ['gestor', 'administrador'];
 
 definirRotas([
+  { caminho: '/', publica: true, soDeslogado: true, tela: telaLanding, titulo: 'Mãos pela Cidade — Voluntariado municipal' },
   { caminho: '/login', publica: true, soDeslogado: true, tela: telaLogin },
   { caminho: '/cadastro', publica: true, soDeslogado: true, tela: telaCadastro },
   { caminho: '/recuperar-senha', publica: true, soDeslogado: true, tela: telaRecuperarSenha },
@@ -67,8 +70,11 @@ async function iniciar() {
 
   document.getElementById('pular').addEventListener('click', () => document.getElementById('conteudo').focus());
   renderRodape();
+  iniciarEfeitos();
 
   iniciarRouter(({ caminho }) => {
+    // A página inicial ocupa a largura toda; as demais ficam no contêiner.
+    document.getElementById('conteudo').classList.toggle('sem-container', caminho === '/');
     renderCabecalho(caminho);
     atualizarBadge();
   });
