@@ -34,7 +34,7 @@ npm test                 # testes unitários + fluxo completo (Postgres embutido
 3. Deploy. `vercel.json` encaminha `/api/*` para a função `api/index.ts`; o resto sai de `public/`.
 4. Cron diário de retenção definido em `vercel.json` (usa `CRON_SECRET`).
 
-## Contas de demonstração (somente com `SEED_DEMO=1`)
+## Contas de demonstração (somente com `SEED_DEMO=1`; o administrador usa `ADMIN_SENHA` quando definida)
 | Perfil | E-mail | Senha |
 |---|---|---|
 | administrador | `admin@prefeitura.gov.br` | `Admin@123` |

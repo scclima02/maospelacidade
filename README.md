@@ -8,6 +8,10 @@ compatíveis e mantém histórico de horas, certificados, indicadores e relatór
 **Stack:** Node 20+ · NestJS 10 (TypeScript) · PostgreSQL no Neon (`pg`, consultas parametrizadas) ·
 frontend estático (HTML5, Bootstrap 5, Chart.js, JavaScript) · pdf-lib · Nodemailer · deploy na Vercel.
 
+## Acesso público
+
+Sistema publicado em **https://svgmunicipal.vercel.app** (Vercel + banco no Neon). Veja as contas de teste abaixo.
+
 ## Desenvolvimento orientado a especificação
 
 Tudo nasce em [`specs/`](specs), que é a fonte de verdade do código:
@@ -40,7 +44,7 @@ No PowerShell use `$env:SEED_DEMO=1; npm run db:seed`.
 
 | Perfil | E-mail | Senha |
 |---|---|---|
-| Administrador | `admin@prefeitura.gov.br` | `Admin@123` |
+| Administrador | `admin@prefeitura.gov.br` | definida em `ADMIN_SENHA` no seed (a do site publicado não está neste repositório) |
 | Gestor | `gestor@prefeitura.gov.br` | `Gestor@123` |
 | Voluntário | `maria@exemplo.com` | `Voluntario@123` |
 | Voluntário | `joao@exemplo.com` | `Voluntario@123` |
