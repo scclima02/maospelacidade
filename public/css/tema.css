@@ -278,6 +278,7 @@ fieldset legend { font-weight: 800; font-size: 1rem; }
 .table thead.table-light { --bs-table-bg: transparent; }
 .table tbody tr { transition: background-color .2s; }
 .table-responsive { max-height: 72vh; border-radius: inherit; }
+.table-responsive.sem-rolagem-v { overflow-y: hidden; }
 /* compensa o arredondamento de subpixel que faria surgir uma barra vertical de 1px */
 .table-responsive > .table { margin-bottom: -2px; }
 .table-responsive.rolavel:not(.fim) { -webkit-mask-image: linear-gradient(to right, #000 calc(100% - 36px), transparent); mask-image: linear-gradient(to right, #000 calc(100% - 36px), transparent); }

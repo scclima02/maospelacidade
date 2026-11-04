@@ -223,7 +223,7 @@ export async function telaDemandaDetalhe(ctx) {
         <div class="mb-1 d-flex justify-content-between small"><span>Vagas preenchidas</span><strong>${ocupadas} de ${d.vagas}</strong></div>
         <div class="progress" role="progressbar" aria-label="Vagas preenchidas" aria-valuenow="${ocupadas}" aria-valuemin="0" aria-valuemax="${d.vagas}">
           <div class="progress-bar bg-success" style="width:${pct}%"></div></div>
-        ${!d.podeEditar ? html`<p class="small text-muted mt-3 mb-0">Visualização somente leitura: apenas o gestor que cadastrou a demanda pode alterá-la.</p>` : ''}
+        ${d.situacao === 'aberta' && !d.podeEditar ? html`<p class="small text-muted mt-3 mb-0">Visualização somente leitura: apenas o gestor que cadastrou a demanda pode alterá-la.</p>` : ''}
         ${d.situacao === 'cancelada' ? html`<div class="mt-3">${alerta('secondary', 'Esta demanda foi cancelada.')}</div>` : ''}
         ${d.situacao === 'concluida' ? html`<div class="mt-3">${alerta('primary', 'Ação concluída: todas as presenças foram registradas.')}</div>` : ''}
       </div></div>

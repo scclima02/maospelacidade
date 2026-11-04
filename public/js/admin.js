@@ -416,7 +416,6 @@ function cartaoCatalogo(ctx, tipo, titulo, singular) {
 
 export async function telaCatalogos(ctx) {
   mount(ctx.el, html`${cabecalhoPagina('Áreas e regiões')}
-    <p class="text-muted">Estes cadastros alimentam os perfis dos voluntários, as demandas e o cruzamento.</p>
     <div class="row g-4" id="cartoes"></div>`);
   const alvo = ctx.el.querySelector('#cartoes');
   alvo.append(cartaoCatalogo(ctx, 'areas', 'Áreas de atuação', 'área'));

@@ -78,6 +78,8 @@ export function aoEntrar(el, fn) {
 function medirRolagem(el) {
   const max = el.scrollWidth - el.clientWidth;
   el.classList.toggle('rolavel', max > 4);
+  // 1–2 px de arredondamento não justificam uma barra vertical.
+  el.classList.toggle('sem-rolagem-v', el.scrollHeight - el.clientHeight <= 2);
   el.classList.toggle('inicio', el.scrollLeft <= 2);
   el.classList.toggle('fim', el.scrollLeft >= max - 2);
 }
