@@ -52,7 +52,7 @@ obtidas do OpenStreetMap; itens sem endereço fixo não aparecem no mapa.
 
 ## Mapa e rotas
 
-Na tela de oportunidades, a aba **Mapa** mostra cada local (Leaflet + OpenStreetMap). Em
+Na tela de oportunidades, a aba **Mapa** mostra cada local (Leaflet, mapa base da Esri com dados OpenStreetMap, claro ou escuro conforme o tema). Em
 "Traçar rota", o navegador pede a localização do voluntário e a rota de carro é calculada pelo OSRM,
 com atalho para seguir a navegação no Google Maps. Demandas novas são localizadas automaticamente
 pelo endereço (Nominatim) ao serem cadastradas.

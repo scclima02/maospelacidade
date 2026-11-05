@@ -3,6 +3,7 @@ import { state } from './state.js';
 import { definirRotas, iniciarRouter, navegar } from './router.js';
 import { renderCabecalho, renderRodape, atualizarBadge } from './cabecalho.js';
 import { iniciarEfeitos } from './efeitos.js';
+import { iniciarSeletores } from './seletor.js';
 import { telaLanding } from './landing.js';
 import { toast } from './ui.js';
 import {
@@ -71,6 +72,7 @@ async function iniciar() {
   document.getElementById('pular').addEventListener('click', () => document.getElementById('conteudo').focus());
   renderRodape();
   iniciarEfeitos();
+  iniciarSeletores();
 
   iniciarRouter(({ caminho }) => {
     // A página inicial ocupa a largura toda; as demais ficam no contêiner.

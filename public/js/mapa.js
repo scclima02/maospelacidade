@@ -1,4 +1,4 @@
-// Mapa das oportunidades (Leaflet + OpenStreetMap) e rota até o local (OSRM).
+// Mapa das oportunidades (Leaflet + mapa base da Esri) e rota até o local (OSRM).
 // Leaflet é carregado sob demanda: só quem abre o mapa baixa a biblioteca.
 import { html, mount, alerta, fmtPeriodo } from './ui.js';
 
@@ -63,11 +63,12 @@ const fmtKm = (km) => `${km.toLocaleString('pt-BR', { maximumFractionDigits: km 
 const fmtMin = (m) => (m < 60 ? `${Math.round(m)} min` : `${Math.floor(m / 60)} h ${Math.round(m % 60)} min`);
 
 const popup = (o) => html`<div class="popup-vaga">
-  <strong>${o.titulo}</strong>
-  ${o.organizacao ? html`<div class="small">${o.organizacao}</div>` : ''}
-  <div class="small text-muted mt-1"><i class="bi bi-geo-alt" aria-hidden="true"></i> ${o.local}</div>
-  <div class="small text-muted"><i class="bi bi-calendar-event" aria-hidden="true"></i> ${fmtPeriodo(o.dataInicio, o.dataFim)}</div>
-  <div class="d-flex flex-wrap gap-1 mt-2">
+  ${o.area ? html`<span class="popup-area ${o.mesmaArea ? 'sua' : ''}">${o.mesmaArea ? html`<i class="bi bi-heart-fill" aria-hidden="true"></i> ` : ''}${o.area}</span>` : ''}
+  <strong class="popup-titulo">${o.titulo}</strong>
+  ${o.organizacao ? html`<div class="popup-org">${o.organizacao}</div>` : ''}
+  <div class="popup-info"><i class="bi bi-geo-alt" aria-hidden="true"></i><span>${o.local}</span></div>
+  <div class="popup-info"><i class="bi bi-calendar-event" aria-hidden="true"></i><span>${fmtPeriodo(o.dataInicio, o.dataFim)}</span></div>
+  <div class="d-flex flex-wrap gap-2 mt-3">
     <button type="button" class="btn btn-primary btn-sm" data-rota="${o.idDemanda}"><i class="bi bi-sign-turn-right" aria-hidden="true"></i> Traçar rota</button>
     <a class="btn btn-outline-secondary btn-sm" href="#/oportunidades/demanda/${o.idDemanda}">Detalhes</a>
   </div>
@@ -98,10 +99,24 @@ export async function montarMapa(alvo, itens, { alturaClasse = 'mapa-vagas', uni
   const caixaMapa = alvo.querySelector('[data-mapa]');
   const painel = alvo.querySelector('[data-painel]');
   const mapa = L.map(caixaMapa, { scrollWheelZoom: !unico }).setView(BRASIL.centro, BRASIL.zoom);
-  L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-    maxZoom: 19,
-    attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>',
-  }).addTo(mapa);
+  // Mapa base da Esri (sem chave): ruas coloridas no tema claro; cinza-escuro com rótulos no escuro.
+  const esri = (servico) => `https://server.arcgisonline.com/ArcGIS/rest/services/${servico}/MapServer/tile/{z}/{y}/{x}`;
+  const CAMADAS = {
+    light: ['World_Street_Map'],
+    dark: ['Canvas/World_Dark_Gray_Base', 'Canvas/World_Dark_Gray_Reference'],
+  };
+  let camadasBase = [];
+  function aplicarBase(tema) {
+    camadasBase.forEach((c) => c.remove());
+    camadasBase = CAMADAS[tema === 'dark' ? 'dark' : 'light'].map((s, i) => L.tileLayer(esri(s), {
+      maxZoom: tema === 'dark' ? 16 : 19,
+      attribution: i ? '' : 'Mapa &copy; <a href="https://www.esri.com/">Esri</a>, HERE, Garmin, &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>',
+    }).addTo(mapa));
+    mapa.setMaxZoom(tema === 'dark' ? 16 : 19);
+  }
+  aplicarBase(document.documentElement.getAttribute('data-bs-theme'));
+  const aoTrocarTema = (ev) => aplicarBase(ev.detail);
+  document.addEventListener('tema', aoTrocarTema);
 
   const icone = (cor) => L.divIcon({ className: 'pino-vaga', html: `<span style="--cor:${cor}"></span>`, iconSize: [26, 34], iconAnchor: [13, 32], popupAnchor: [0, -28] });
   const porId = new Map(comLugar.map((o) => [String(o.idDemanda), o]));
@@ -166,6 +181,9 @@ export async function montarMapa(alvo, itens, { alturaClasse = 'mapa-vagas', uni
 
   // O contêiner pode ter mudado de tamanho enquanto a biblioteca carregava.
   setTimeout(() => mapa.invalidateSize(), 50);
-  return () => mapa.remove();
+  return () => {
+    document.removeEventListener('tema', aoTrocarTema);
+    mapa.remove();
+  };
 }
 

@@ -61,9 +61,11 @@ export async function telaDemandas(ctx) {
             <td class="num">${d.vagas}</td>
             <td>${badge(d.situacao)}</td>
             <td class="small">
-              <span class="badge text-bg-info" title="Sugeridos">${d.totais.sugeridas} sug.</span>
-              <span class="badge text-bg-primary" title="Confirmados">${d.totais.confirmadas} conf.</span>
-              <span class="badge text-bg-success" title="Selecionados">${d.totais.selecionadas} sel.</span>
+              <div class="contagens">
+                <span class="contagem c-sug" title="Sugeridos"><b>${d.totais.sugeridas}</b> sug.</span>
+                <span class="contagem c-conf" title="Confirmados"><b>${d.totais.confirmadas}</b> conf.</span>
+                <span class="contagem c-sel" title="Selecionados"><b>${d.totais.selecionadas}</b> sel.</span>
+              </div>
             </td>
             <td class="text-end"><a class="btn btn-outline-primary btn-sm" href="#/demandas/${d.id}">Abrir</a></td>
           </tr>`)}</tbody>

@@ -229,16 +229,17 @@ export async function executar(botao, fn) {
 }
 
 // ---------- Modais ----------
-export function abrirModal({ titulo, corpo, rodape, grande = false }) {
+export function abrirModal({ titulo, corpo, rodape, grande = false, icone = '', tom = '' }) {
   const id = uid();
   const el = document.createElement('div');
-  el.className = 'modal fade';
+  el.className = `modal fade ${tom ? `modal-${tom}` : ''}`;
   el.tabIndex = -1;
   el.setAttribute('aria-labelledby', `${id}t`);
   el.setAttribute('aria-hidden', 'true');
-  mount(el, html`<div class="modal-dialog modal-dialog-scrollable ${grande ? 'modal-lg' : ''}">
+  mount(el, html`<div class="modal-dialog modal-dialog-centered modal-dialog-scrollable ${grande ? 'modal-lg' : ''}">
     <div class="modal-content">
       <div class="modal-header">
+        ${icone ? html`<span class="modal-icone" aria-hidden="true"><i class="bi ${icone}"></i></span>` : ''}
         <h2 class="modal-title fs-5" id="${id}t">${titulo}</h2>
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fechar"></button>
       </div>
@@ -260,6 +261,8 @@ export function confirmar({ titulo = 'Confirmar', mensagem, ok = 'Confirmar', pe
   return new Promise((resolve) => {
     const m = abrirModal({
       titulo,
+      icone: perigo ? 'bi-exclamation-triangle-fill' : 'bi-question-lg',
+      tom: perigo ? 'perigo' : '',
       corpo: html`<p class="mb-0">${mensagem}</p>`,
       rodape: html`<button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Cancelar</button>
         <button type="button" class="btn ${perigo ? 'btn-danger' : 'btn-primary'}" data-ok>${ok}</button>`,
@@ -278,6 +281,8 @@ export function modalFormulario({ titulo, corpo, ok = 'Salvar', perigo = false, 
   const m = abrirModal({
     titulo,
     grande,
+    icone: perigo ? 'bi-exclamation-triangle-fill' : 'bi-pencil-square',
+    tom: perigo ? 'perigo' : '',
     corpo: html`<form id="${fid}" novalidate><div data-erros></div>${corpo}</form>`,
     rodape: html`<button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Cancelar</button>
       <button type="submit" form="${fid}" class="btn ${perigo ? 'btn-danger' : 'btn-primary'}">${ok}</button>`,
