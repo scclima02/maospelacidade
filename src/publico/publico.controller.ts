@@ -30,7 +30,7 @@ export class PublicoController {
           'Histórico de participação e horas voluntariadas',
         ],
         quemAcessa: [
-          'Gestores públicos e responsáveis por ações comunitárias (telefone e e-mail apenas de quem confirmou participação na ação)',
+          'Gestores responsáveis pelas ações comunitárias (telefone e e-mail apenas de quem confirmou participação na ação)',
           'Administradores do sistema',
         ],
         retencao: `Seus dados são mantidos enquanto a conta estiver ativa e por até ${c.retencaoMeses} meses de inatividade; depois disso são anonimizados. Você pode revogar o consentimento ou excluir sua conta a qualquer momento.`,
