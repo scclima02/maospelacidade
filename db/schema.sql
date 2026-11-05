@@ -63,7 +63,7 @@ CREATE TABLE IF NOT EXISTS consentimento (
 
 CREATE TABLE IF NOT EXISTS demanda (
   id_demanda  SERIAL PRIMARY KEY,
-  id_gestor   INTEGER NOT NULL REFERENCES gestor(id_usuario),
+  id_gestor   INTEGER NOT NULL REFERENCES usuario(id_usuario),
   id_area     INTEGER NOT NULL REFERENCES area_atuacao(id_area),
   id_regiao   INTEGER NOT NULL REFERENCES regiao(id_regiao),
   titulo      VARCHAR(200) NOT NULL,
@@ -73,8 +73,27 @@ CREATE TABLE IF NOT EXISTS demanda (
   data_fim    TIMESTAMPTZ NOT NULL,
   vagas       INTEGER NOT NULL CHECK (vagas >= 1),
   situacao    VARCHAR(10) NOT NULL DEFAULT 'aberta' CHECK (situacao IN ('aberta','concluida','cancelada')),
+  organizacao  VARCHAR(150),
+  link_externo VARCHAR(500),
   CHECK (data_fim > data_inicio)
 );
+
+-- Ajustes de bancos criados antes destas colunas/regras
+ALTER TABLE demanda ADD COLUMN IF NOT EXISTS organizacao VARCHAR(150);
+ALTER TABLE demanda ADD COLUMN IF NOT EXISTS link_externo VARCHAR(500);
+ALTER TABLE demanda ADD COLUMN IF NOT EXISTS latitude  NUMERIC(9,6);
+ALTER TABLE demanda ADD COLUMN IF NOT EXISTS longitude NUMERIC(9,6);
+
+-- O responsável pela demanda pode ser gestor ou administrador
+DO $$
+BEGIN
+  IF EXISTS (SELECT 1 FROM pg_constraint
+             WHERE conname = 'demanda_id_gestor_fkey' AND confrelid = 'gestor'::regclass) THEN
+    ALTER TABLE demanda DROP CONSTRAINT demanda_id_gestor_fkey;
+    ALTER TABLE demanda ADD CONSTRAINT demanda_id_gestor_fkey
+      FOREIGN KEY (id_gestor) REFERENCES usuario(id_usuario);
+  END IF;
+END $$;
 
 CREATE TABLE IF NOT EXISTS participacao (
   id_participacao   SERIAL PRIMARY KEY,
@@ -140,9 +159,11 @@ INSERT INTO configuracao (chave, valor) VALUES
 ON CONFLICT (chave) DO NOTHING;
 
 INSERT INTO area_atuacao (nome) VALUES
-  ('Educação'), ('Meio ambiente'), ('Assistência social'), ('Saúde'), ('Eventos'), ('Esporte e lazer')
+  ('Educação'), ('Meio ambiente'), ('Assistência social'), ('Saúde'), ('Eventos'), ('Esporte e lazer'),
+  ('Proteção animal'), ('Cultura')
 ON CONFLICT (nome) DO NOTHING;
 
 INSERT INTO regiao (nome) VALUES
-  ('Centro'), ('Zona Norte'), ('Zona Sul'), ('Zona Leste'), ('Zona Oeste')
+  ('Porto Alegre – Centro'), ('Porto Alegre – Zona Norte'), ('Porto Alegre – Zona Sul'),
+  ('Porto Alegre – Zona Leste'), ('Canoas'), ('Online (remoto)')
 ON CONFLICT (nome) DO NOTHING;

@@ -193,7 +193,7 @@ describe('Fluxo completo do sistema', () => {
   });
 
   it('UC14: editar refaz o cruzamento e avisa os envolvidos', async () => {
-    await admin.put(`/api/demandas/${idDemanda}`).send({}).expect(403); // admin não edita demanda
+    await davi.put(`/api/demandas/${idDemanda}`).send({}).expect(403); // voluntário não edita demanda
     const corpo = {
       titulo: 'Mutirão de teste',
       descricao: 'Descrição da ação',
@@ -233,6 +233,52 @@ describe('Fluxo completo do sistema', () => {
     expect((await db.query('SELECT 1 FROM certificado')).length).toBe(1);
   });
 
+  it('vitrine: voluntário vê demandas abertas da sua área, explora outras e se inscreve sozinho', async () => {
+    const corpo = {
+      titulo: 'Ação em outra área', descricao: 'Texto', idArea: idOutraArea, idRegiao: idOutraRegiao, local: 'Parque',
+      dataInicio: `${DIA}T09:00`, dataFim: `${DIA}T10:00`, vagas: 3,
+      organizacao: 'ONG Real', link: 'https://exemplo.org/vaga',
+    };
+    await gestor.post('/api/demandas').send({ ...corpo, link: 'ftp://x' }).expect(400);
+    await gestor.post('/api/demandas').send({ ...corpo, latitude: -30.03 }).expect(400); // precisa das duas
+    const comMapa = (await gestor.post('/api/demandas').send({ ...corpo, titulo: 'Com mapa', latitude: -30.0346, longitude: -51.2177 }).expect(201)).body.demanda;
+    expect(comMapa).toMatchObject({ latitude: -30.0346, longitude: -51.2177 });
+    await admin.delete(`/api/demandas/${comMapa.id}`).expect(200);
+    const dem = (await gestor.post('/api/demandas').send(corpo).expect(201)).body.demanda;
+    expect(dem).toMatchObject({ organizacao: 'ONG Real', link: 'https://exemplo.org/vaga' });
+
+    // Bia (área idArea) não vê nas recomendadas, mas vê em "todas"
+    const rec = (await bia.get('/api/oportunidades/explorar').expect(200)).body;
+    expect(rec.some((o: any) => o.idDemanda === dem.id)).toBe(false);
+    const todas = (await bia.get('/api/oportunidades/explorar?escopo=todas').expect(200)).body;
+    const item = todas.find((o: any) => o.idDemanda === dem.id);
+    expect(item).toMatchObject({ idParticipacao: null, situacao: null, mesmaArea: false, organizacao: 'ONG Real' });
+    expect(todas[todas.length - 1].idDemanda).toBe(dem.id); // fora da área vem por último
+    expect((await bia.get(`/api/oportunidades/explorar?escopo=todas&busca=ONG%20Real`).expect(200)).body).toHaveLength(1);
+
+    // Davi (área idOutraArea, mesma região? não) vê nas recomendadas
+    expect((await davi.get('/api/oportunidades/explorar').expect(200)).body.map((o: any) => o.idDemanda)).toContain(dem.id);
+
+    const det = (await bia.get(`/api/oportunidades/demanda/${dem.id}`).expect(200)).body;
+    expect(det.situacao).toBeNull();
+    const insc = (await bia.post(`/api/oportunidades/demanda/${dem.id}/participar`).expect(200)).body;
+    expect(insc.situacao).toBe('confirmada');
+    await bia.post(`/api/oportunidades/demanda/${dem.id}/participar`).expect(200); // idempotente
+    const vols = (await gestor.get(`/api/demandas/${dem.id}/voluntarios`).expect(200)).body;
+    expect(vols.find((v: any) => v.nome === 'Bia Lima')).toMatchObject({ situacao: 'confirmada', email: 'bia@teste.com' });
+    await gestor.post(`/api/oportunidades/demanda/${dem.id}/participar`).expect(403);
+
+    // Admin cria, edita, cancela e exclui qualquer demanda
+    const daAdmin = (await admin.post('/api/demandas').send({ ...corpo, titulo: 'Criada pelo admin' }).expect(201)).body.demanda;
+    expect(daAdmin.podeEditar).toBe(true);
+    await admin.put(`/api/demandas/${dem.id}`).send({ ...corpo, vagas: 5 }).expect(200);
+    await gestor.delete(`/api/demandas/${dem.id}`).expect(403);
+    await admin.delete(`/api/demandas/${dem.id}`).expect(200);
+    await admin.delete(`/api/demandas/${daAdmin.id}`).expect(200);
+    await admin.get(`/api/demandas/${dem.id}`).expect(404);
+    await admin.delete(`/api/demandas/${dem.id}`).expect(404);
+  });
+
   it('UC14: cancelar demanda notifica; demanda concluída não pode ser cancelada', async () => {
     await gestor.post(`/api/demandas/${idDemanda}/cancelar`).expect(422);
     const corpo = {
@@ -257,8 +303,8 @@ describe('Fluxo completo do sistema', () => {
     expect(Buffer.from(pdf.body).subarray(0, 4).toString()).toBe('%PDF');
     await ana.get('/api/admin/indicadores').expect(403);
 
-    await admin.post('/api/admin/areas').send({ nome: 'Cultura' }).expect(201);
-    await admin.post('/api/admin/areas').send({ nome: 'Cultura' }).expect(409);
+    await admin.post('/api/admin/areas').send({ nome: 'Música' }).expect(201);
+    await admin.post('/api/admin/areas').send({ nome: 'Música' }).expect(409);
     const novaRegiao = (await admin.post('/api/admin/regioes').send({ nome: 'Distrito Industrial' }).expect(201)).body;
     await admin.put(`/api/admin/regioes/${novaRegiao.id}`).send({ ativo: false }).expect(200);
     expect((await http().get('/api/catalogos/regioes').expect(200)).body.some((r: any) => r.id === novaRegiao.id)).toBe(false);
@@ -278,6 +324,21 @@ describe('Fluxo completo do sistema', () => {
     await admin.put(`/api/admin/usuarios/${lista[0].id}`).send({ situacao: 'inativo' }).expect(200);
     await http().post('/api/auth/login').send({ email: 'gestor@teste.com', senha: senhaTemporaria }).expect(401);
     await gestor.get('/api/demandas').expect(401); // sessão antiga deixa de valer com a conta inativa
+  });
+
+  it('admin exclui itens de catálogo sem uso e usuários', async () => {
+    const area = (await admin.post('/api/admin/areas').send({ nome: 'Área temporária' }).expect(201)).body;
+    await admin.delete(`/api/admin/areas/${area.id}`).expect(200);
+    await admin.delete(`/api/admin/areas/${idArea}`).expect(409); // usada em demandas
+    const reg = (await admin.post('/api/admin/regioes').send({ nome: 'Região temporária' }).expect(201)).body;
+    await admin.delete(`/api/admin/regioes/${reg.id}`).expect(200);
+    await ana.delete(`/api/admin/regioes/${idRegiao}`).expect(403);
+
+    const g = (await admin.post('/api/admin/usuarios').send({ nome: 'Gestor Temp', email: 'temp@teste.com', senha: 'Temp12345', perfil: 'gestor' }).expect(201)).body;
+    const [{ id: idAdmin }] = await db.query(`SELECT id_usuario AS id FROM usuario WHERE email = 'admin@teste.com'`);
+    await admin.delete(`/api/admin/usuarios/${idAdmin}`).expect(422);
+    await admin.delete(`/api/admin/usuarios/${g.id}`).expect(200);
+    await admin.delete(`/api/admin/usuarios/${g.id}`).expect(404);
   });
 
   it('UC02: recuperação de senha com link de uso único', async () => {

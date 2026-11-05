@@ -14,8 +14,8 @@ export async function telaDemandas(ctx) {
   const { areas, regioes } = await carregarCatalogos();
   const ehGestor = state.usuario.perfil === 'gestor';
 
-  mount(ctx.el, html`${cabecalhoPagina('Demandas', ehGestor
-      ? html`<a class="btn btn-primary" href="#/demandas/nova"><i class="bi bi-plus-lg" aria-hidden="true"></i> Nova demanda</a>` : '')}
+  mount(ctx.el, html`${cabecalhoPagina('Demandas',
+      html`<a class="btn btn-primary" href="#/demandas/nova"><i class="bi bi-plus-lg" aria-hidden="true"></i> Nova demanda</a>`)}
     <form class="card card-body shadow-sm mb-3" id="filtros" novalidate aria-label="Filtros de demandas">
       <div class="row g-2 align-items-end">
         <div class="col-12 col-lg-3"><label class="form-label small mb-1" for="f-busca">Buscar</label>
@@ -55,7 +55,7 @@ export async function telaDemandas(ctx) {
           <caption class="visually-hidden">Demandas cadastradas</caption>
           <thead class="table-light"><tr><th scope="col">Demanda</th><th scope="col">Área / região</th><th scope="col">Período</th><th scope="col" class="num">Vagas</th><th scope="col">Situação</th><th scope="col">Voluntários</th><th scope="col"><span class="visually-hidden">Ações</span></th></tr></thead>
           <tbody>${itens.map((d) => html`<tr>
-            <td><strong>${d.titulo}</strong><div class="small text-muted">${d.gestor || ''}</div></td>
+            <td><strong>${d.titulo}</strong><div class="small text-muted">${d.organizacao || d.gestor || ''}</div></td>
             <td>${d.area}<div class="small text-muted">${d.regiao}</div></td>
             <td class="small">${fmtPeriodo(d.dataInicio, d.dataFim)}</td>
             <td class="num">${d.vagas}</td>
@@ -121,6 +121,11 @@ export async function telaDemandaForm(ctx, edicao = false) {
           <div class="col-12"><label class="form-label" for="d-local">Local</label>
             <input class="form-control" id="d-local" name="local" required maxlength="200" value="${d.local || ''}" placeholder="Endereço ou ponto de encontro">
             <div class="invalid-feedback">Informe o local.</div></div>
+          <div class="col-12 col-md-6"><label class="form-label" for="d-org">Organização responsável <span class="text-muted">(opcional)</span></label>
+            <input class="form-control" id="d-org" name="organizacao" maxlength="150" value="${d.organizacao || ''}" placeholder="ONG, coletivo ou instituição"></div>
+          <div class="col-12 col-md-6"><label class="form-label" for="d-link">Link da organização <span class="text-muted">(opcional)</span></label>
+            <input class="form-control" type="url" id="d-link" name="link" maxlength="500" value="${d.link || ''}" placeholder="https://">
+            <div class="invalid-feedback">Informe um link começando com https://</div></div>
           <div class="col-12 col-md-4"><label class="form-label" for="d-inicio">Início</label>
             <input class="form-control" type="datetime-local" id="d-inicio" name="dataInicio" required ${edicao ? '' : raw(`min="${agora}"`)} value="${d.dataInicio ? paraInputLocal(d.dataInicio) : ''}">
             <div class="invalid-feedback">Informe a data e o horário de início.</div></div>
@@ -155,6 +160,8 @@ export async function telaDemandaForm(ctx, edicao = false) {
       dataInicio: f.dataInicio.value,
       dataFim: f.dataFim.value,
       vagas: Number(f.vagas.value),
+      organizacao: f.organizacao.value.trim() || undefined,
+      link: f.link.value.trim() || undefined,
     };
     if (edicao) {
       await api.put(`/demandas/${d.id}`, corpo);
@@ -210,20 +217,24 @@ export async function telaDemandaDetalhe(ctx) {
             ${badge(d.situacao)}
             ${podeAgir ? html`<a class="btn btn-outline-primary btn-sm" href="#/demandas/${d.id}/editar"><i class="bi bi-pencil" aria-hidden="true"></i> Editar</a>
               <button type="button" class="btn btn-outline-danger btn-sm" id="cancelar-demanda"><i class="bi bi-x-circle" aria-hidden="true"></i> Cancelar demanda</button>` : ''}
+            ${d.podeExcluir ? html`<button type="button" class="btn btn-danger btn-sm" id="excluir-demanda"><i class="bi bi-trash" aria-hidden="true"></i> Excluir</button>` : ''}
           </div>
         </div>
         <p style="white-space:pre-line">${d.descricao}</p>
         <dl class="row mb-3">
+          ${d.organizacao || d.link ? html`<dt class="col-sm-3">Organização</dt><dd class="col-sm-9">${d.link
+            ? html`<a href="${d.link}" target="_blank" rel="noopener noreferrer">${d.organizacao || d.link} <i class="bi bi-box-arrow-up-right" aria-hidden="true"></i></a>`
+            : d.organizacao}</dd>` : ''}
           <dt class="col-sm-3">Área</dt><dd class="col-sm-9">${d.area}</dd>
           <dt class="col-sm-3">Região</dt><dd class="col-sm-9">${d.regiao}</dd>
           <dt class="col-sm-3">Local</dt><dd class="col-sm-9">${d.local}</dd>
           <dt class="col-sm-3">Período</dt><dd class="col-sm-9">${fmtPeriodo(d.dataInicio, d.dataFim)}</dd>
-          <dt class="col-sm-3">Responsável</dt><dd class="col-sm-9">${d.gestor || '—'}</dd>
+          <dt class="col-sm-3">Cadastrada por</dt><dd class="col-sm-9">${d.gestor || '—'}</dd>
         </dl>
         <div class="mb-1 d-flex justify-content-between small"><span>Vagas preenchidas</span><strong>${ocupadas} de ${d.vagas}</strong></div>
         <div class="progress" role="progressbar" aria-label="Vagas preenchidas" aria-valuenow="${ocupadas}" aria-valuemin="0" aria-valuemax="${d.vagas}">
           <div class="progress-bar bg-success" style="width:${pct}%"></div></div>
-        ${d.situacao === 'aberta' && !d.podeEditar ? html`<p class="small text-muted mt-3 mb-0">Visualização somente leitura: apenas o gestor que cadastrou a demanda pode alterá-la.</p>` : ''}
+        ${d.situacao === 'aberta' && !d.podeEditar ? html`<p class="small text-muted mt-3 mb-0">Visualização somente leitura: apenas o gestor que cadastrou a demanda ou um administrador pode alterá-la.</p>` : ''}
         ${d.situacao === 'cancelada' ? html`<div class="mt-3">${alerta('secondary', 'Esta demanda foi cancelada.')}</div>` : ''}
         ${d.situacao === 'concluida' ? html`<div class="mt-3">${alerta('primary', 'Ação concluída: todas as presenças foram registradas.')}</div>` : ''}
       </div></div>
@@ -306,6 +317,21 @@ export async function telaDemandaDetalhe(ctx) {
           await api.post(`/demandas/${d.id}/cancelar`);
           toast('Demanda cancelada.', 'warning');
           await desenhar();
+        });
+      });
+    }
+
+    const excluir = ctx.el.querySelector('#excluir-demanda');
+    if (excluir) {
+      excluir.addEventListener('click', async () => {
+        if (!(await confirmar({
+          titulo: 'Excluir demanda', ok: 'Excluir definitivamente', perigo: true,
+          mensagem: 'A demanda será apagada junto com as inscrições, presenças, certificados e avisos ligados a ela. Esta ação não pode ser desfeita.',
+        }))) return;
+        await executar(excluir, async () => {
+          await api.del(`/demandas/${d.id}`);
+          toast('Demanda excluída.', 'warning');
+          navegar('#/demandas');
         });
       });
     }

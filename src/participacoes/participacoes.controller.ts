@@ -13,6 +13,22 @@ export class ParticipacoesController {
     return this.servico.listar(u.id, query);
   }
 
+  @Get('oportunidades/explorar')
+  explorar(@Usuario() u: UsuarioSessao, @Query() query: Record<string, any>) {
+    return this.servico.explorar(u.id, query);
+  }
+
+  @Get('oportunidades/demanda/:idDemanda')
+  obterPorDemanda(@Usuario() u: UsuarioSessao, @Param('idDemanda', ParseIntPipe) idDemanda: number) {
+    return this.servico.obterPorDemanda(u.id, idDemanda);
+  }
+
+  @Post('oportunidades/demanda/:idDemanda/participar')
+  @HttpCode(200)
+  participar(@Usuario() u: UsuarioSessao, @Param('idDemanda', ParseIntPipe) idDemanda: number) {
+    return this.servico.participar(u.id, idDemanda);
+  }
+
   @Get('oportunidades/:id')
   obter(@Usuario() u: UsuarioSessao, @Param('id', ParseIntPipe) id: number) {
     return this.servico.obter(u.id, id);

@@ -35,12 +35,27 @@ Tudo nasce em [`specs/`](specs), que é a fonte de verdade do código:
 npm install
 cp .env.example .env      # preencher DATABASE_URL (Neon) e JWT_SECRET
 npm run db:migrate        # cria as tabelas e os catálogos iniciais
-SEED_DEMO=1 npm run db:seed   # administrador inicial + dados de demonstração
+SEED_DEMO=1 npm run db:seed   # administrador, vagas reais e contas de demonstração
 npm run start:dev         # http://localhost:3000
 npm test                  # unitários + fluxo completo (Postgres embutido, não usa o Neon)
 ```
 
 No PowerShell use `$env:SEED_DEMO=1; npm run db:seed`.
+
+## Oportunidades reais
+
+O seed carrega `db/vagas-reais.json`: 47 oportunidades de voluntariado de instituições reais de
+Porto Alegre e Canoas (hospitais, ONGs, bancos de alimentos, grupos escoteiros etc.), cada uma com o
+link da página de origem. Dias e horários são estimados quando a instituição não os publica (a
+descrição avisa), e atividades recorrentes entram com a próxima ocorrência. As coordenadas foram
+obtidas do OpenStreetMap; itens sem endereço fixo não aparecem no mapa.
+
+## Mapa e rotas
+
+Na tela de oportunidades, a aba **Mapa** mostra cada local (Leaflet + OpenStreetMap). Em
+"Traçar rota", o navegador pede a localização do voluntário e a rota de carro é calculada pelo OSRM,
+com atalho para seguir a navegação no Google Maps. Demandas novas são localizadas automaticamente
+pelo endereço (Nominatim) ao serem cadastradas.
 
 ## Contas de demonstração (`SEED_DEMO=1`)
 
@@ -57,7 +72,7 @@ Em produção defina `ADMIN_EMAIL` e `ADMIN_SENHA` antes do `db:seed`. Passo a p
 ## Orientações para análise do código
 
 ```
-db/            schema.sql (script do banco), migrate.mjs, seed.mjs
+db/            schema.sql (script do banco), migrate.mjs, seed.mjs, vagas-reais.json
 src/
   common/      banco, validação, datas (horário de Brasília), e-mail, PDF, configuração
   auth/        login, sessão em cookie, guard global e controle de perfis

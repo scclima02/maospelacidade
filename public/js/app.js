@@ -17,7 +17,6 @@ import {
 } from './admin.js';
 
 const V = ['voluntario'];
-const G = ['gestor'];
 const A = ['administrador'];
 const GA = ['gestor', 'administrador'];
 
@@ -30,14 +29,15 @@ definirRotas([
   { caminho: '/validar', publica: true, tela: telaValidarCertificado },
 
   { caminho: '/oportunidades', perfis: V, tela: telaOportunidades },
+  { caminho: '/oportunidades/demanda/:idDemanda', perfis: V, tela: telaOportunidadeDetalhe },
   { caminho: '/oportunidades/:id', perfis: V, tela: telaOportunidadeDetalhe },
   { caminho: '/notificacoes', perfis: V, tela: telaNotificacoes },
   { caminho: '/historico', perfis: V, tela: telaHistorico },
   { caminho: '/perfil', perfis: V, tela: telaPerfil },
 
   { caminho: '/demandas', perfis: GA, tela: telaDemandas },
-  { caminho: '/demandas/nova', perfis: G, tela: (ctx) => telaDemandaForm(ctx, false) },
-  { caminho: '/demandas/:id/editar', perfis: G, tela: (ctx) => telaDemandaForm(ctx, true) },
+  { caminho: '/demandas/nova', perfis: GA, tela: (ctx) => telaDemandaForm(ctx, false) },
+  { caminho: '/demandas/:id/editar', perfis: GA, tela: (ctx) => telaDemandaForm(ctx, true) },
   { caminho: '/demandas/:id', perfis: GA, tela: telaDemandaDetalhe },
 
   { caminho: '/admin/painel', perfis: A, tela: telaPainel },

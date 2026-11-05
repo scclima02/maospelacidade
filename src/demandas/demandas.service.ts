@@ -8,6 +8,7 @@ import {
 import { UsuarioSessao } from '../auth/auth.decorators';
 import { Configuracao, ConfiguracaoService } from '../common/configuracao.service';
 import { DatabaseService, Db } from '../common/database.service';
+import { GeocodificacaoService } from '../common/geocodificacao.service';
 import { fimDoDia, formatarDataHora, inicioDoDia } from '../common/datas';
 import { escaparLike, taxaComparecimentoSql } from '../common/sql';
 import { Validador, diaOpcional, inteiroOpcional } from '../common/validador';
@@ -23,6 +24,21 @@ export interface DemandaDto {
   inicio: Date;
   fim: Date;
   vagas: number;
+  organizacao: string | null;
+  link: string | null;
+  latitude: number | null;
+  longitude: number | null;
+}
+
+/** Número decimal opcional dentro de um intervalo (coordenadas). */
+function decimalOpcional(v: Validador, valor: unknown, rotulo: string, min: number, max: number): number | null {
+  if (valor === undefined || valor === null || valor === '') return null;
+  const n = typeof valor === 'number' ? valor : Number(valor);
+  if (!Number.isFinite(n) || n < min || n > max) {
+    v.erro(`${rotulo} inválida.`);
+    return null;
+  }
+  return n;
 }
 
 const SITUACOES_DEMANDA = ['aberta', 'concluida', 'cancelada'];
@@ -32,6 +48,8 @@ const BASE_DEMANDA = `
   SELECT d.id_demanda AS id, d.titulo, d.descricao, d.id_area AS "idArea", a.nome AS area,
          d.id_regiao AS "idRegiao", r.nome AS regiao, d.local_acao AS "local",
          d.data_inicio AS "dataInicio", d.data_fim AS "dataFim", d.vagas, d.situacao,
+         d.organizacao, d.link_externo AS link,
+         d.latitude::float8 AS latitude, d.longitude::float8 AS longitude,
          d.id_gestor AS "idGestor", ug.nome AS gestor,
          (SELECT COUNT(*)::int FROM participacao p WHERE p.id_demanda = d.id_demanda AND p.situacao = 'sugerida') AS sugeridas,
          (SELECT COUNT(*)::int FROM participacao p WHERE p.id_demanda = d.id_demanda AND p.situacao = 'confirmada') AS confirmadas,
@@ -49,7 +67,16 @@ export class DemandasService {
     private readonly db: DatabaseService,
     private readonly cfg: ConfiguracaoService,
     private readonly notificacoes: NotificacoesService,
+    private readonly geo: GeocodificacaoService,
   ) {}
+
+  /** Coordenadas informadas têm prioridade; sem elas, tenta localizar o endereço. */
+  private async coordenadas(dto: DemandaDto) {
+    if (dto.latitude !== null && dto.longitude !== null) return { latitude: dto.latitude, longitude: dto.longitude };
+    const [r] = await this.db.query('SELECT nome FROM regiao WHERE id_regiao = $1', [dto.idRegiao]);
+    const achado = r ? await this.geo.localizar(dto.local, r.nome) : null;
+    return { latitude: achado?.latitude ?? null, longitude: achado?.longitude ?? null };
+  }
 
   // ---------- validação ----------
 
@@ -63,6 +90,13 @@ export class DemandasService {
     const inicio = v.dataHora('dataInicio', 'Data/hora de início');
     const fim = v.dataHora('dataFim', 'Data/hora de término');
     const vagas = v.inteiro('vagas', 'Número de voluntários', { min: 1, max: 10000 });
+    const organizacao = v.texto('organizacao', 'Organização responsável', { max: 150, opcional: true });
+    const link = v.texto('link', 'Link da organização', { max: 500, opcional: true });
+    if (link && !/^https?:\/\/[^\s]+$/i.test(link)) v.erro('Link da organização deve começar com http:// ou https://.');
+    const corpo = (body ?? {}) as Record<string, unknown>;
+    const latitude = decimalOpcional(v, corpo.latitude, 'Latitude', -90, 90);
+    const longitude = decimalOpcional(v, corpo.longitude, 'Longitude', -180, 180);
+    if ((latitude === null) !== (longitude === null)) v.erro('Informe latitude e longitude juntas.');
     v.concluir();
     if (fim! <= inicio!) throw new UnprocessableEntityException('O término deve ser posterior ao início.');
     return {
@@ -74,6 +108,10 @@ export class DemandasService {
       inicio: inicio!,
       fim: fim!,
       vagas: vagas!,
+      organizacao: organizacao ?? null,
+      link: link ?? null,
+      latitude,
+      longitude,
     };
   }
 
@@ -94,7 +132,8 @@ export class DemandasService {
     return {
       ...resto,
       totais: { sugeridas, confirmadas, selecionadas, compareceram, faltaram },
-      podeEditar: u.perfil === 'gestor' && l.idGestor === u.id && l.situacao === 'aberta',
+      podeEditar: (u.perfil === 'administrador' || (u.perfil === 'gestor' && l.idGestor === u.id)) && l.situacao === 'aberta',
+      podeExcluir: u.perfil === 'administrador',
     };
   }
 
@@ -244,12 +283,15 @@ export class DemandasService {
     if (dto.inicio <= new Date()) throw new UnprocessableEntityException('A data de início deve ser futura.');
     await this.exigirCatalogoAtivo(this.db, dto.idArea, dto.idRegiao);
     const cfg = await this.cfg.obter();
+    const coord = await this.coordenadas(dto);
 
     const { id, avisos } = await this.db.tx(async (tx) => {
       const [{ id }] = await tx.query(
-        `INSERT INTO demanda (id_gestor, id_area, id_regiao, titulo, descricao, local_acao, data_inicio, data_fim, vagas, situacao)
-         VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,'aberta') RETURNING id_demanda AS id`,
-        [u.id, dto.idArea, dto.idRegiao, dto.titulo, dto.descricao, dto.local, dto.inicio, dto.fim, dto.vagas],
+        `INSERT INTO demanda (id_gestor, id_area, id_regiao, titulo, descricao, local_acao, data_inicio, data_fim, vagas,
+                              organizacao, link_externo, latitude, longitude, situacao)
+         VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13,'aberta') RETURNING id_demanda AS id`,
+        [u.id, dto.idArea, dto.idRegiao, dto.titulo, dto.descricao, dto.local, dto.inicio, dto.fim, dto.vagas,
+         dto.organizacao, dto.link, coord.latitude, coord.longitude],
       );
       const compativeis = await this.buscarCompativeis(tx, { id, ...dto }, cfg);
       const gravadas = await this.inserirSugeridas(tx, id, compativeis);
@@ -275,13 +317,24 @@ export class DemandasService {
       [id],
     );
     if (!d) throw new NotFoundException('Demanda não encontrada.');
-    if (d.idGestor !== u.id) throw new ForbiddenException('Somente o gestor que cadastrou a demanda pode alterá-la.');
+    if (u.perfil !== 'administrador' && d.idGestor !== u.id) {
+      throw new ForbiddenException('Somente o gestor que cadastrou a demanda ou um administrador pode alterá-la.');
+    }
     return d;
   }
 
   async atualizar(u: UsuarioSessao, id: number, body: unknown) {
     const dto = this.validar(body);
     const cfg = await this.cfg.obter();
+    const [antes] = await this.db.query(
+      `SELECT local_acao AS "local", id_regiao AS "idRegiao", latitude::float8 AS latitude, longitude::float8 AS longitude
+       FROM demanda WHERE id_demanda = $1`,
+      [id],
+    );
+    if (!antes) throw new NotFoundException('Demanda não encontrada.');
+    const coord = dto.latitude === null && antes.local === dto.local && antes.idRegiao === dto.idRegiao
+      ? { latitude: antes.latitude, longitude: antes.longitude }
+      : await this.coordenadas(dto);
 
     const avisos = await this.db.tx(async (tx) => {
       const atual = await this.carregarDoDono(tx, id, u);
@@ -299,8 +352,10 @@ export class DemandasService {
 
       await tx.query(
         `UPDATE demanda SET id_area=$2, id_regiao=$3, titulo=$4, descricao=$5, local_acao=$6,
-                data_inicio=$7, data_fim=$8, vagas=$9 WHERE id_demanda=$1`,
-        [id, dto.idArea, dto.idRegiao, dto.titulo, dto.descricao, dto.local, dto.inicio, dto.fim, dto.vagas],
+                data_inicio=$7, data_fim=$8, vagas=$9, organizacao=$10, link_externo=$11,
+                latitude=$12, longitude=$13 WHERE id_demanda=$1`,
+        [id, dto.idArea, dto.idRegiao, dto.titulo, dto.descricao, dto.local, dto.inicio, dto.fim, dto.vagas,
+         dto.organizacao, dto.link, coord.latitude, coord.longitude],
       );
 
       const mudouCruzamento =
@@ -383,12 +438,19 @@ export class DemandasService {
           idDemanda: id,
           tipo: 'cancelamento',
           assunto: `Demanda cancelada: ${d.titulo}`,
-          mensagem: `A demanda "${d.titulo}" foi cancelada pelo gestor.`,
+          mensagem: `A demanda "${d.titulo}" foi cancelada.`,
         }),
       );
     });
     await this.notificacoes.notificar(avisos);
     return this.obter(id, u);
+  }
+
+  /** Exclusão definitiva (somente administrador): remove participações, notificações e certificados da demanda. */
+  async excluir(id: number) {
+    const r = await this.db.query('DELETE FROM demanda WHERE id_demanda = $1 RETURNING id_demanda', [id]);
+    if (!r.length) throw new NotFoundException('Demanda não encontrada.');
+    return { ok: true };
   }
 
   // ---------- UC17 ----------

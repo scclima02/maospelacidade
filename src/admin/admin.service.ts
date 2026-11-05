@@ -159,6 +159,20 @@ export class AdminService {
     return { senhaTemporaria };
   }
 
+  /**
+   * Exclusão definitiva de um usuário. As demandas que ele cadastrou passam para o administrador
+   * que executou a exclusão; participações, notificações e certificados do usuário são removidos.
+   */
+  async excluirUsuario(admin: UsuarioSessao, id: number) {
+    if (id === admin.id) throw new UnprocessableEntityException('Você não pode excluir a própria conta.');
+    await this.obterUsuario(id);
+    await this.db.tx(async (tx) => {
+      await tx.query('UPDATE demanda SET id_gestor = $2 WHERE id_gestor = $1', [id, admin.id]);
+      await tx.query('DELETE FROM usuario WHERE id_usuario = $1', [id]);
+    });
+    return { ok: true };
+  }
+
   // ---------- UC20 ----------
 
   listarCatalogo(tipo: Catalogo) {
@@ -198,6 +212,24 @@ export class AdminService {
       if (e?.code === PG_VIOLACAO_UNICA) throw new ConflictException(`${c.rotulo} com este nome já existe.`);
       throw e;
     }
+  }
+
+  /** Exclusão definitiva; bloqueada enquanto houver demandas usando o item. */
+  async excluirCatalogo(tipo: Catalogo, id: number) {
+    const c = CATALOGOS[tipo];
+    const [{ n }] = await this.db.query(`SELECT COUNT(*)::int AS n FROM demanda WHERE ${c.pk} = $1`, [id]);
+    if (n > 0) {
+      throw new ConflictException(
+        `${c.rotulo} usada em ${n} demanda(s). Exclua ou altere essas demandas antes, ou apenas inative.`,
+      );
+    }
+    const r = await this.db.tx(async (tx) => {
+      if (tipo === 'areas') await tx.query('DELETE FROM voluntario_area WHERE id_area = $1', [id]);
+      else await tx.query('UPDATE voluntario SET id_regiao = NULL WHERE id_regiao = $1', [id]);
+      return tx.query(`DELETE FROM ${c.tabela} WHERE ${c.pk} = $1 RETURNING ${c.pk}`, [id]);
+    });
+    if (!r.length) throw new NotFoundException(`${c.rotulo} não encontrada.`);
+    return { ok: true };
   }
 
   // ---------- RN33 ----------

@@ -21,7 +21,8 @@ verificáveis que o código e os testes devem cumprir.
 
 ## Demandas (UC11, UC14)
 - RN11 Obrigatórios: título, descrição, área, região, local, início, fim, vagas. `data_fim > data_inicio`, `vagas >= 1`, início no futuro (no cadastro).
-- RN12 Somente gestor cria. Somente o gestor dono edita/cancela, enquanto `situacao = 'aberta'`.
+- RN12 Gestor ou administrador cria. O gestor dono ou qualquer administrador edita/cancela, enquanto `situacao = 'aberta'`. Somente o administrador **exclui** uma demanda (exclusão definitiva, com participações, avisos e certificados ligados a ela).
+- RN12b Campos opcionais: `organizacao` (ONG/instituição responsável) e `link` (página da organização ou da vaga, `http(s)://`).
 - RN13 Ao criar: executa cruzamento (RN14) e notificações (RN18).
 - RN13b Ao editar: se área, região, início ou fim mudarem → refaz cruzamento: novos compatíveis entram como `sugerida` (e são notificados); `sugerida` que deixaram de ser compatíveis são removidas; pontuações de quem permanece são atualizadas; participantes `confirmada`/`selecionada` são mantidos e notificados da alteração (tipo `alteracao`). Se `vagas` ficar menor que os já selecionados → 422.
 - RN13c Cancelar: `situacao = 'cancelada'`; participantes ativos (sugerida, confirmada, selecionada) são notificados (tipo `cancelamento`) e passam a `cancelada`.
@@ -38,7 +39,9 @@ verificáveis que o código e os testes devem cumprir.
 
 ## Resposta do voluntário (UC06, UC07)
 - RN20 Oportunidades = demandas `aberta` com participação do voluntário em `sugerida`/`confirmada`/`selecionada` (e filtros por área, região e período). Filtros são opcionais.
-- RN21 Transições permitidas: `sugerida → confirmada | recusada`; `confirmada → cancelada`; `selecionada → cancelada`; `cancelada → confirmada` (se a demanda ainda estiver aberta e iniciar no futuro). `recusada` é final. Só vale com a demanda `aberta` e início no futuro.
+- RN20b Vitrine: o voluntário vê **todas** as demandas abertas com início no futuro. Visão "Para você": só as áreas de interesse dele; visão "Todas": qualquer área. Ordem: área de interesse, depois mesma região, depois data mais próxima. Filtros: área, região, período e busca (título, descrição, organização, local).
+- RN20c Inscrição espontânea: em qualquer demanda aberta e futura, o voluntário com consentimento vigente pode clicar em "Quero participar"; a participação é criada (ou volta) como `confirmada`, com pontuação RN15, e aparece para o gestor na seleção (UC17). Sem consentimento → 422.
+- RN21 Transições permitidas: `sugerida → confirmada | recusada`; `confirmada → cancelada`; `selecionada → cancelada`; `cancelada → confirmada` (se a demanda ainda estiver aberta e iniciar no futuro). `recusada` só volta a `confirmada` por inscrição espontânea (RN20c). Só vale com a demanda `aberta` e início no futuro.
 
 ## Gestor (UC15, UC16, UC17, UC18)
 - RN22 UC15 mostra todos os compatíveis em ordem; e-mail e telefone aparecem **somente** para `confirmada`/`selecionada`/`compareceu`/`faltou` daquela demanda.

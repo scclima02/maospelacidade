@@ -49,6 +49,9 @@ Prefixo `/api`. JSON UTF-8. Autenticação por cookie `sessao` (httpOnly); o fro
 | Método e rota | Acesso | Notas |
 |---|---|---|
 | GET `/oportunidades?idArea&idRegiao&de&ate&situacao` | voluntario | `de`/`ate` = `YYYY-MM-DD`. Padrão: demandas abertas, situações sugerida/confirmada/selecionada → `[Oportunidade]` |
+| GET `/oportunidades/explorar?escopo&idArea&idRegiao&de&ate&busca` | voluntario | RN20b. `escopo` = `recomendadas` (padrão) ou `todas` → `[{idDemanda,idParticipacao\|null,situacao\|null,titulo,descricao,idArea,area,idRegiao,regiao,local,dataInicio,dataFim,vagas,organizacao,link,mesmaArea,mesmaRegiao,ocupadas}]` |
+| GET `/oportunidades/demanda/:idDemanda` | voluntario | → `Oportunidade` (com `idParticipacao`/`situacao` nulos se ainda não houver participação) |
+| POST `/oportunidades/demanda/:idDemanda/participar` | voluntario | RN20c → `Oportunidade` com `situacao = confirmada` |
 | GET `/oportunidades/:idParticipacao` | voluntario dono | → `Oportunidade` |
 | POST `/participacoes/:id/confirmar` | voluntario dono | RN21 → `Oportunidade` |
 | POST `/participacoes/:id/recusar` | voluntario dono | RN21 → `Oportunidade` |
@@ -63,14 +66,16 @@ Prefixo `/api`. JSON UTF-8. Autenticação por cookie `sessao` (httpOnly); o fro
 | POST `/notificacoes/ler-todas` | → `{ok}` |
 
 ## Demandas — gestor/administrador (UC11, UC14, UC15, UC16, UC17, UC18)
-`Demanda` = `{id,titulo,descricao,idArea,area,idRegiao,regiao,local,dataInicio,dataFim,vagas,situacao,idGestor,gestor,totais:{sugeridas,confirmadas,selecionadas,compareceram,faltaram},podeEditar}`.
+`Demanda` = `{id,titulo,descricao,idArea,area,idRegiao,regiao,local,dataInicio,dataFim,vagas,situacao,organizacao,link,idGestor,gestor,totais:{sugeridas,confirmadas,selecionadas,compareceram,faltaram},podeEditar,podeExcluir}`.
+As rotas de escrita aceitam o gestor dono **ou** qualquer administrador (RN12).
 
 | Método e rota | Acesso | Corpo → Resposta |
 |---|---|---|
-| POST `/demandas` | gestor | `{titulo,descricao,idArea,idRegiao,local,dataInicio,dataFim,vagas}` → 201 `{demanda, compativeis}` |
+| POST `/demandas` | gestor, administrador | `{titulo,descricao,idArea,idRegiao,local,dataInicio,dataFim,vagas,organizacao?,link?}` → 201 `{demanda, compativeis}` |
+| DELETE `/demandas/:id` | administrador | exclusão definitiva → `{ok:true}` |
 | GET `/demandas?idArea&idRegiao&de&ate&situacao&minhas=1&busca` | gestor, administrador | → `[Demanda]` (todas; `minhas=1` filtra as do gestor logado) |
 | GET `/demandas/:id` | gestor, administrador | → `Demanda` |
-| PUT `/demandas/:id` | gestor dono | mesmo corpo do POST → `Demanda` (RN13b) |
+| PUT `/demandas/:id` | gestor dono, administrador | mesmo corpo do POST → `Demanda` (RN13b) |
 | POST `/demandas/:id/cancelar` | gestor dono | → `Demanda` |
 | GET `/demandas/:id/voluntarios` | gestor, administrador | → `[{idParticipacao,idVoluntario,nome,regiao,mesmaRegiao,situacao,pontuacao,taxaComparecimento,horasRealizadas,email,telefone}]` ordenado (RN17); `email`/`telefone` = `null` fora de RN22 |
 | GET `/voluntarios/:id/resumo` | gestor, administrador | → `{nome,participacoes,horas,faltas,taxaComparecimento,ultimas:[{titulo,data,situacao,horas}]}` (RN23) |
@@ -85,9 +90,11 @@ Prefixo `/api`. JSON UTF-8. Autenticação por cookie `sessao` (httpOnly); o fro
 | POST `/admin/usuarios` | `{nome,email,telefone?,senha,perfil:'gestor'\|'administrador',organizacao?,cargo?}` → 201 usuário |
 | PUT `/admin/usuarios/:id` | `{nome?,perfil?,situacao?:'ativo'\|'inativo',organizacao?,cargo?}` → usuário |
 | POST `/admin/usuarios/:id/redefinir-acesso` | → `{senhaTemporaria}` (exibida uma vez) |
+| DELETE `/admin/usuarios/:id` | exclusão definitiva (não a própria conta); demandas do usuário passam ao administrador → `{ok:true}` |
 | GET `/admin/areas`, `/admin/regioes` | → `[{id,nome,ativo}]` (todas) |
 | POST `/admin/areas`, `/admin/regioes` | `{nome}` → 201 item |
 | PUT `/admin/areas/:id`, `/admin/regioes/:id` | `{nome?,ativo?}` → item |
+| DELETE `/admin/areas/:id`, `/admin/regioes/:id` | exclusão definitiva; 409 se houver demandas usando o item → `{ok:true}` |
 | GET `/admin/config` / PUT `/admin/config` | `{pesoBase,pesoRegiao,retencaoMeses,nomeOrganizacao}` |
 | GET `/admin/indicadores?de&ate` | → `{voluntariosAtivos,demandasAbertas,demandasConcluidas,participacoes,horas,taxaComparecimento,demandasPorMes:[{mes,total}],voluntariosPorArea:[{area,total}]}` |
 | GET `/admin/relatorios/engajamento?de&ate&idArea&idRegiao` | → `{filtros,porAreaRegiao:[{area,regiao,voluntarios}],acoes:[{idDemanda,titulo,data,area,regiao,horas,presencas,faltas}],totais:{demandas,presencas,faltas,horas}}` |

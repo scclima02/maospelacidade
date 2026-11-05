@@ -1,4 +1,4 @@
-import { Body, Controller, Get, HttpCode, Param, ParseIntPipe, Post, Put, Query } from '@nestjs/common';
+import { Body, Controller, Delete, Get, HttpCode, Param, ParseIntPipe, Post, Put, Query } from '@nestjs/common';
 import { Perfis, Usuario, UsuarioSessao } from '../auth/auth.decorators';
 import { DemandasService } from './demandas.service';
 
@@ -8,7 +8,6 @@ export class DemandasController {
   constructor(private readonly servico: DemandasService) {}
 
   @Post('demandas')
-  @Perfis('gestor')
   criar(@Usuario() u: UsuarioSessao, @Body() body: unknown) {
     return this.servico.criar(u, body);
   }
@@ -24,13 +23,17 @@ export class DemandasController {
   }
 
   @Put('demandas/:id')
-  @Perfis('gestor')
   atualizar(@Usuario() u: UsuarioSessao, @Param('id', ParseIntPipe) id: number, @Body() body: unknown) {
     return this.servico.atualizar(u, id, body);
   }
 
+  @Delete('demandas/:id')
+  @Perfis('administrador')
+  excluir(@Param('id', ParseIntPipe) id: number) {
+    return this.servico.excluir(id);
+  }
+
   @Post('demandas/:id/cancelar')
-  @Perfis('gestor')
   @HttpCode(200)
   cancelar(@Usuario() u: UsuarioSessao, @Param('id', ParseIntPipe) id: number) {
     return this.servico.cancelar(u, id);
@@ -47,21 +50,18 @@ export class DemandasController {
   }
 
   @Post('demandas/:id/selecionar')
-  @Perfis('gestor')
   @HttpCode(200)
   selecionar(@Usuario() u: UsuarioSessao, @Param('id', ParseIntPipe) id: number, @Body() body: unknown) {
     return this.servico.selecionar(u, id, body);
   }
 
   @Post('demandas/:id/desselecionar')
-  @Perfis('gestor')
   @HttpCode(200)
   desselecionar(@Usuario() u: UsuarioSessao, @Param('id', ParseIntPipe) id: number, @Body() body: unknown) {
     return this.servico.desselecionar(u, id, body);
   }
 
   @Post('demandas/:id/presencas')
-  @Perfis('gestor')
   @HttpCode(200)
   presencas(@Usuario() u: UsuarioSessao, @Param('id', ParseIntPipe) id: number, @Body() body: unknown) {
     return this.servico.registrarPresencas(u, id, body);

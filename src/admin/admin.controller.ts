@@ -1,6 +1,7 @@
 import {
   Body,
   Controller,
+  Delete,
   Get,
   HttpCode,
   Param,
@@ -40,6 +41,11 @@ export class AdminController {
     return this.admin.atualizarUsuario(u, id, body);
   }
 
+  @Delete('usuarios/:id')
+  excluirUsuario(@Usuario() u: UsuarioSessao, @Param('id', ParseIntPipe) id: number) {
+    return this.admin.excluirUsuario(u, id);
+  }
+
   @Post('usuarios/:id/redefinir-acesso')
   @HttpCode(200)
   redefinirAcesso(@Param('id', ParseIntPipe) id: number) {
@@ -62,6 +68,11 @@ export class AdminController {
     return this.admin.atualizarCatalogo('areas', id, body);
   }
 
+  @Delete('areas/:id')
+  excluirArea(@Param('id', ParseIntPipe) id: number) {
+    return this.admin.excluirCatalogo('areas', id);
+  }
+
   @Get('regioes')
   regioes() {
     return this.admin.listarCatalogo('regioes');
@@ -75,6 +86,11 @@ export class AdminController {
   @Put('regioes/:id')
   atualizarRegiao(@Param('id', ParseIntPipe) id: number, @Body() body: unknown) {
     return this.admin.atualizarCatalogo('regioes', id, body);
+  }
+
+  @Delete('regioes/:id')
+  excluirRegiao(@Param('id', ParseIntPipe) id: number) {
+    return this.admin.excluirCatalogo('regioes', id);
   }
 
   // Configurações

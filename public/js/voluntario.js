@@ -9,71 +9,146 @@ import {
 import {
   blocoTermo, camposVoluntario, iniciarDisponibilidades, coletarVoluntario,
 } from './componentes.js';
+import { montarMapa, temCoordenadas } from './mapa.js';
 
 const opcoes = (itens, selecionado = '') => itens.map((i) => html`<option value="${i.id}" ${String(selecionado) === String(i.id) ? raw('selected') : ''}>${i.nome}</option>`);
 
 // ---------- UC06: oportunidades ----------
+// Três visões: recomendadas (áreas de interesse, região do voluntário primeiro), todas e inscrições.
+const ABAS = [
+  ['recomendadas', 'Para você', 'bi-stars'],
+  ['todas', 'Todas as oportunidades', 'bi-grid'],
+  ['mapa', 'Mapa', 'bi-map'],
+  ['minhas', 'Minhas inscrições', 'bi-bookmark-check'],
+];
+
+const linkOrganizacao = (o) => (o.link
+  ? html`<a href="${o.link}" target="_blank" rel="noopener noreferrer">${o.organizacao || 'Página da organização'} <i class="bi bi-box-arrow-up-right" aria-hidden="true"></i></a>`
+  : (o.organizacao || ''));
+
 const cartaoOportunidade = (o) => html`<div class="col-12 col-md-6 col-xl-4">
   <div class="card h-100 card-oportunidade shadow-sm"><div class="card-body d-flex flex-column">
-    <div class="d-flex justify-content-between align-items-start gap-2 mb-2">
-      ${badge(o.situacao)}
-      <span class="badge text-bg-light border">${o.area}</span>
+    <div class="d-flex flex-wrap justify-content-between align-items-start gap-2 mb-2">
+      <span class="d-flex flex-wrap gap-1">
+        <span class="badge text-bg-light border">${o.area}</span>
+        ${o.mesmaRegiao ? html`<span class="badge text-bg-success">Sua região</span>` : ''}
+      </span>
+      ${o.situacao ? badge(o.situacao) : ''}
     </div>
-    <h2 class="h5">${o.titulo}</h2>
+    <h2 class="h5 mb-1">${o.titulo}</h2>
+    ${o.organizacao ? html`<p class="small fw-semibold mb-2"><i class="bi bi-building" aria-hidden="true"></i> ${o.organizacao}</p>` : ''}
     <p class="text-muted small flex-grow-1">${resumir(o.descricao, 140)}</p>
     <ul class="list-unstyled small mb-3">
       <li><i class="bi bi-calendar-event" aria-hidden="true"></i> ${fmtPeriodo(o.dataInicio, o.dataFim)}</li>
       <li><i class="bi bi-geo-alt" aria-hidden="true"></i> ${o.local} — ${o.regiao}</li>
       <li><i class="bi bi-people" aria-hidden="true"></i> ${o.vagas} ${Number(o.vagas) === 1 ? 'vaga' : 'vagas'}</li>
     </ul>
-    <a class="btn btn-primary btn-sm align-self-start" href="#/oportunidades/${o.idParticipacao}">Ver detalhes</a>
+    <a class="btn btn-primary btn-sm align-self-start" href="#/oportunidades/demanda/${o.idDemanda}">Ver detalhes</a>
   </div></div>
 </div>`;
 
 export async function telaOportunidades(ctx) {
-  const { areas, regioes } = await carregarCatalogos();
+  const [{ areas, regioes }, eu] = await Promise.all([carregarCatalogos(), api.get('/voluntarios/me')]);
+  const minhasAreas = areas.filter((a) => (eu.areas || []).includes(a.id)).map((a) => a.nome);
+  let aba = ABAS.some(([k]) => k === ctx.query?.aba) ? ctx.query.aba : 'recomendadas';
+
   mount(ctx.el, html`${cabecalhoPagina('Oportunidades')}
+    <ul class="nav nav-pills abas-vagas mb-3" role="tablist" aria-label="Visões das oportunidades">
+      ${ABAS.map(([k, rotulo, icone]) => html`<li class="nav-item" role="presentation">
+        <button type="button" class="nav-link" role="tab" data-aba="${k}"><i class="bi ${icone}" aria-hidden="true"></i> ${rotulo}</button></li>`)}
+    </ul>
     <form class="card card-body shadow-sm mb-3" id="filtros" novalidate aria-label="Filtros de oportunidades">
       <div class="row g-2 align-items-end">
-        <div class="col-6 col-lg-3"><label class="form-label small mb-1" for="f-area">Área</label>
+        <div class="col-12 col-lg-3" data-so-vitrine><label class="form-label small mb-1" for="f-busca">Buscar</label>
+          <input class="form-control" id="f-busca" name="busca" placeholder="Ação, organização ou bairro"></div>
+        <div class="col-6 col-lg-2"><label class="form-label small mb-1" for="f-area">Área</label>
           <select class="form-select" id="f-area" name="idArea"><option value="">Todas</option>${opcoes(areas)}</select></div>
-        <div class="col-6 col-lg-3"><label class="form-label small mb-1" for="f-regiao">Região</label>
+        <div class="col-6 col-lg-2"><label class="form-label small mb-1" for="f-regiao">Região</label>
           <select class="form-select" id="f-regiao" name="idRegiao"><option value="">Todas</option>${opcoes(regioes)}</select></div>
         <div class="col-6 col-lg-2"><label class="form-label small mb-1" for="f-de">De</label>
           <input class="form-control" type="date" id="f-de" name="de"></div>
         <div class="col-6 col-lg-2"><label class="form-label small mb-1" for="f-ate">Até</label>
           <input class="form-control" type="date" id="f-ate" name="ate"></div>
-        <div class="col-12 col-lg-2 d-flex gap-2">
-          <button class="btn btn-primary flex-grow-1" type="submit">Filtrar</button>
+        <div class="col-12 col-lg-1 d-flex gap-2">
+          <button class="btn btn-primary flex-grow-1" type="submit" aria-label="Filtrar"><i class="bi bi-funnel" aria-hidden="true"></i></button>
           <button class="btn btn-outline-secondary" type="reset" aria-label="Limpar filtros"><i class="bi bi-x-lg" aria-hidden="true"></i></button>
         </div>
       </div>
     </form>
+    <p class="small text-muted" id="dica" aria-live="polite"></p>
     <div id="lista" aria-live="polite"></div>`);
 
   const form = ctx.el.querySelector('#filtros');
   const lista = ctx.el.querySelector('#lista');
+  const dica = ctx.el.querySelector('#dica');
+  const botoesAba = [...ctx.el.querySelectorAll('[data-aba]')];
+  let limparMapa = () => {};
+  ctx.limpeza.push(() => limparMapa());
+
+  function marcarAba() {
+    botoesAba.forEach((b) => {
+      const ativa = b.dataset.aba === aba;
+      b.classList.toggle('active', ativa);
+      b.setAttribute('aria-selected', String(ativa));
+    });
+    ctx.el.querySelector('[data-so-vitrine]').classList.toggle('d-none', aba === 'minhas');
+  }
 
   async function carregar() {
+    marcarAba();
+    limparMapa();
+    limparMapa = () => {};
     mount(lista, spinner());
+    const filtros = lerForm(form);
     try {
-      const itens = await api.get(`/oportunidades${qs(lerForm(form))}`);
-      mount(lista, itens.length
-        ? html`<div class="row g-3">${itens.map(cartaoOportunidade)}</div>`
-        : vazio('Nenhuma oportunidade encontrada no momento. Quando surgir uma ação compatível com o seu perfil, você será avisado.', 'bi-search-heart'));
+      if (aba === 'mapa') {
+        dica.textContent = 'Clique em um marcador para ver a ação e traçar a rota da sua localização até o local. Em vermelho: suas áreas de interesse.';
+        const itens = await api.get(`/oportunidades/explorar${qs({ ...filtros, escopo: 'todas' })}`);
+        limparMapa = await montarMapa(lista, itens);
+        return;
+      }
+      if (aba === 'minhas') {
+        delete filtros.busca;
+        dica.textContent = 'Ações em que você confirmou interesse, foi sugerido(a) ou selecionado(a).';
+        const itens = await api.get(`/oportunidades${qs(filtros)}`);
+        mount(lista, itens.length
+          ? html`<div class="row g-3">${itens.map(cartaoOportunidade)}</div>`
+          : vazio('Você ainda não se inscreveu em nenhuma ação. Veja as oportunidades e clique em "Quero participar".', 'bi-bookmark'));
+        return;
+      }
+      dica.textContent = aba === 'recomendadas'
+        ? (minhasAreas.length
+          ? `Ações das suas áreas de interesse (${minhasAreas.join(', ')}). As da sua região (${eu.regiao || 'não informada'}) aparecem primeiro.`
+          : 'Você ainda não escolheu áreas de interesse. Atualize em "Meu perfil".')
+        : 'Todas as ações abertas. As das suas áreas e da sua região aparecem primeiro.';
+      const itens = await api.get(`/oportunidades/explorar${qs({ ...filtros, escopo: aba })}`);
+      if (itens.length) {
+        mount(lista, html`<p class="small mb-2"><strong>${itens.length}</strong> ${itens.length === 1 ? 'oportunidade encontrada' : 'oportunidades encontradas'}</p>
+          <div class="row g-3">${itens.map(cartaoOportunidade)}</div>`);
+      } else {
+        mount(lista, html`${vazio('Nenhuma oportunidade encontrada com esses filtros.', 'bi-search-heart')}
+          ${aba === 'recomendadas' ? html`<div class="text-center"><button type="button" class="btn btn-outline-primary" data-ir="todas">Ver todas as oportunidades</button></div>` : ''}`);
+      }
     } catch (e) {
       mount(lista, alerta('danger', mensagensDe(e).join(' ')));
     }
   }
+
+  botoesAba.forEach((b) => b.addEventListener('click', () => { aba = b.dataset.aba; carregar(); }));
+  lista.addEventListener('click', (ev) => {
+    const b = ev.target.closest('[data-ir]');
+    if (b) { aba = b.dataset.ir; carregar(); }
+  });
   form.addEventListener('submit', (ev) => { ev.preventDefault(); carregar(); });
   form.addEventListener('reset', () => setTimeout(carregar));
   await carregar();
 }
 
-// ---------- UC07: detalhe, confirmar, recusar, cancelar ----------
+// ---------- UC07: detalhe, participar, confirmar, recusar, cancelar ----------
 function acoesPossiveis(o) {
   const aberta = o.situacaoDemanda === 'aberta' && new Date(o.dataInicio) > new Date();
   if (!aberta) return [];
+  if (!o.situacao || o.situacao === 'recusada') return ['participar'];
   return {
     sugerida: ['confirmar', 'recusar'],
     confirmada: ['cancelar'],
@@ -83,20 +158,21 @@ function acoesPossiveis(o) {
 }
 
 const ROTULO_ACAO = {
+  participar: ['btn-success', 'Quero participar'],
   confirmar: ['btn-success', 'Confirmar participação'],
   recusar: ['btn-outline-danger', 'Recusar'],
   cancelar: ['btn-outline-danger', 'Cancelar participação'],
 };
 
 export async function telaOportunidadeDetalhe(ctx) {
-  const id = ctx.params.id;
+  const { id, idDemanda } = ctx.params;
 
   function desenhar(o) {
     const acoes = acoesPossiveis(o);
     const aviso = {
       selecionada: alerta('success', 'Você foi selecionado(a) para esta ação. Compareça no local e horário combinados.'),
-      confirmada: alerta('primary', 'Participação confirmada. Aguarde a seleção do gestor responsável.'),
-      recusada: alerta('secondary', 'Você recusou esta oportunidade e ela não será sugerida novamente.'),
+      confirmada: alerta('primary', 'Participação confirmada. Aguarde a seleção do responsável pela ação.'),
+      recusada: alerta('secondary', 'Você recusou esta oportunidade. Se mudar de ideia, ainda pode participar.'),
       cancelada: alerta('secondary', 'Sua participação foi cancelada.'),
       compareceu: alerta('success', 'Presença registrada. Seu certificado está disponível no histórico.'),
       faltou: alerta('warning', 'Falta registrada nesta ação.'),
@@ -106,11 +182,12 @@ export async function telaOportunidadeDetalhe(ctx) {
       <div class="card shadow-sm mt-2"><div class="card-body">
         <div class="d-flex flex-wrap justify-content-between align-items-start gap-2 mb-2">
           <h1 class="h3 mb-0" tabindex="-1">${o.titulo}</h1>
-          <div class="d-flex gap-2">${badge(o.situacao)}${o.situacaoDemanda !== 'aberta' ? badge(o.situacaoDemanda) : ''}</div>
+          <div class="d-flex gap-2">${o.situacao ? badge(o.situacao) : ''}${o.situacaoDemanda !== 'aberta' ? badge(o.situacaoDemanda) : ''}</div>
         </div>
         ${aviso}
         <p class="mb-3" style="white-space:pre-line">${o.descricao}</p>
         <dl class="row mb-4">
+          ${o.organizacao || o.link ? html`<dt class="col-sm-3">Organização</dt><dd class="col-sm-9">${linkOrganizacao(o)}</dd>` : ''}
           <dt class="col-sm-3">Área</dt><dd class="col-sm-9">${o.area}</dd>
           <dt class="col-sm-3">Região</dt><dd class="col-sm-9">${o.regiao}</dd>
           <dt class="col-sm-3">Local</dt><dd class="col-sm-9">${o.local}</dd>
@@ -119,28 +196,43 @@ export async function telaOportunidadeDetalhe(ctx) {
         </dl>
         <div class="d-flex flex-wrap gap-2">
           ${acoes.map((a) => html`<button type="button" class="btn ${ROTULO_ACAO[a][0]}" data-acao="${a}">${a === 'confirmar' && o.situacao === 'cancelada' ? 'Confirmar novamente' : ROTULO_ACAO[a][1]}</button>`)}
+          ${o.link ? html`<a class="btn btn-outline-secondary" href="${o.link}" target="_blank" rel="noopener noreferrer">Ver na página da organização <i class="bi bi-box-arrow-up-right" aria-hidden="true"></i></a>` : ''}
         </div>
-      </div></div>`);
+      </div></div>
+      ${temCoordenadas(o) ? html`<section class="card shadow-sm mt-3" aria-labelledby="t-mapa"><div class="card-body">
+        <h2 class="h5" id="t-mapa"><i class="bi bi-map" aria-hidden="true"></i> Como chegar</h2>
+        <div data-mapa-detalhe></div>
+      </div></section>` : ''}`);
+
+    const caixaMapa = ctx.el.querySelector('[data-mapa-detalhe]');
+    if (caixaMapa) montarMapa(caixaMapa, [o], { alturaClasse: 'mapa-detalhe', unico: true }).then((f) => ctx.limpeza.push(f));
 
     ctx.el.querySelectorAll('[data-acao]').forEach((b) => b.addEventListener('click', async () => {
       const acao = b.dataset.acao;
       if (acao === 'recusar' && !(await confirmar({
         titulo: 'Recusar oportunidade', ok: 'Recusar', perigo: true,
-        mensagem: 'Ao recusar, esta ação não será mais sugerida para você. Deseja continuar?',
+        mensagem: 'Ao recusar, esta ação deixará de ser sugerida para você. Deseja continuar?',
       }))) return;
       if (acao === 'cancelar' && !(await confirmar({
         titulo: 'Cancelar participação', ok: 'Cancelar participação', perigo: true,
         mensagem: 'Sua vaga será liberada para outros voluntários. Deseja cancelar sua participação?',
       }))) return;
       await executar(b, async () => {
-        const atualizada = await api.post(`/participacoes/${o.idParticipacao}/${acao}`);
-        toast({ confirmar: 'Participação confirmada!', recusar: 'Oportunidade recusada.', cancelar: 'Participação cancelada.' }[acao]);
+        const atualizada = acao === 'participar'
+          ? await api.post(`/oportunidades/demanda/${o.idDemanda}/participar`)
+          : await api.post(`/participacoes/${o.idParticipacao}/${acao}`);
+        toast({
+          participar: 'Inscrição feita! O responsável pela ação vai analisar e você será avisado.',
+          confirmar: 'Participação confirmada!',
+          recusar: 'Oportunidade recusada.',
+          cancelar: 'Participação cancelada.',
+        }[acao]);
         desenhar(atualizada);
       });
     }));
   }
 
-  desenhar(await api.get(`/oportunidades/${id}`));
+  desenhar(await api.get(idDemanda ? `/oportunidades/demanda/${idDemanda}` : `/oportunidades/${id}`));
 }
 
 // ---------- UC06: notificações ----------

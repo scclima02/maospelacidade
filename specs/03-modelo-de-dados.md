@@ -13,7 +13,7 @@ Base: Diagrama ER do projeto (Figura 2). Script executável: `db/schema.sql`.
 | `voluntario_area` | (id_usuario, id_area) PK | N:N voluntário × áreas de interesse |
 | `disponibilidade` | id_disponibilidade PK, id_usuario FK, dia_semana (0=dom…6=sáb), hora_inicio, hora_fim | Várias faixas por voluntário |
 | `consentimento` | id_consentimento PK, id_usuario FK, versao_termo, finalidade, data_aceite, data_revogacao | Vigente = `data_revogacao IS NULL` |
-| `demanda` | id_demanda PK, id_gestor FK, id_area FK, id_regiao FK, titulo, descricao, local_acao, data_inicio, data_fim, vagas, situacao | `situacao` ∈ aberta, concluida, cancelada |
+| `demanda` | id_demanda PK, id_gestor FK (→ `usuario`: gestor ou administrador), id_area FK, id_regiao FK, titulo, descricao, local_acao, data_inicio, data_fim, vagas, situacao, organizacao, link_externo | `situacao` ∈ aberta, concluida, cancelada. `organizacao`/`link_externo` opcionais (instituição real responsável e página dela) |
 | `participacao` | id_participacao PK, id_demanda FK, id_voluntario FK, situacao, pontuacao, horas_realizadas, data_registro | UK (id_demanda, id_voluntario). `situacao` ∈ sugerida, confirmada, recusada, selecionada, compareceu, faltou, cancelada |
 | `notificacao` | id_notificacao PK, id_usuario FK, id_demanda FK (nulo permitido), tipo, mensagem, canal, data_envio, lida | `canal` ∈ sistema, email. `tipo` ∈ oportunidade, selecao, alteracao, cancelamento, outro |
 | `certificado` | id_certificado PK, id_participacao FK UK, codigo_validacao UK, data_emissao | Um certificado por participação |

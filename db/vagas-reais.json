@@ -1,0 +1,949 @@
+[
+  {
+    "titulo": "Apoio emocional e material a pacientes oncológicos no Hospital de Clínicas (Laapac)",
+    "descricao": "A Laapac é o grupo oficial de voluntários do Hospital de Clínicas de Porto Alegre. Os voluntários visitam pacientes internados, oferecem escuta e acolhimento e ajudam na entrega de roupas, itens de higiene, próteses e no empréstimo de perucas para quem está em tratamento contra o câncer. O grupo atende setores adultos e pediátricos e está sempre buscando novos integrantes.",
+    "organizacao": "Laapac – Hospital de Clínicas de Porto Alegre",
+    "area": "Saúde",
+    "regiao": "Porto Alegre – Centro",
+    "local": "Hospital de Clínicas, Bloco A, térreo, sala 118 – Santa Cecília, Porto Alegre",
+    "diasSemana": [
+      2,
+      4
+    ],
+    "horaInicio": "14:00",
+    "horaFim": "16:00",
+    "horarioEstimado": true,
+    "dataEspecifica": null,
+    "vagas": 5,
+    "link": "https://www.hcpa.edu.br/venha-para-o-hcpa/voluntariado-venha-hcpa",
+    "fonte": "hcpa.edu.br",
+    "latitude": -30.038678,
+    "longitude": -51.206625
+  },
+  {
+    "titulo": "Apoio pedagógico a crianças internadas no Hospital da Criança Santo Antônio",
+    "descricao": "Pelo Programa Santa Casa de Voluntariado, o voluntário acompanha crianças e adolescentes internados no Hospital da Criança Santo Antônio em atividades de apoio escolar, ajudando a manter o vínculo com os estudos durante o tratamento. Exige idade mínima de 21 anos, 3 horas semanais em horário comercial, compromisso de 6 meses e participação no curso preparatório Sesc/Santa Casa.",
+    "organizacao": "Irmandade Santa Casa de Misericórdia de Porto Alegre",
+    "area": "Educação",
+    "regiao": "Porto Alegre – Centro",
+    "local": "Hospital da Criança Santo Antônio – Rua Prof. Annes Dias, 295, Centro Histórico, Porto Alegre",
+    "diasSemana": [
+      1,
+      3,
+      5
+    ],
+    "horaInicio": "14:00",
+    "horaFim": "17:00",
+    "horarioEstimado": true,
+    "dataEspecifica": null,
+    "vagas": 6,
+    "link": "https://www.santacasa.org.br/pagina/programa-voluntarios",
+    "fonte": "santacasa.org.br",
+    "latitude": -30.030014,
+    "longitude": -51.222494
+  },
+  {
+    "titulo": "Incentivo à leitura na Biblioteca Jardim das Letras (Casa de Apoio Madre Ana)",
+    "descricao": "Voluntários do Programa Santa Casa de Voluntariado promovem momentos de leitura e empréstimo de livros na biblioteca da Casa de Apoio Madre Ana, que acolhe pacientes e acompanhantes vindos de outras cidades. A atividade busca tornar a estadia mais leve e estimular o hábito de ler. Requisitos: 21 anos ou mais, 3 h semanais e curso preparatório.",
+    "organizacao": "Irmandade Santa Casa de Misericórdia de Porto Alegre",
+    "area": "Cultura",
+    "regiao": "Porto Alegre – Centro",
+    "local": "Casa de Apoio Madre Ana – Complexo Santa Casa, Centro Histórico, Porto Alegre",
+    "diasSemana": [
+      2,
+      4
+    ],
+    "horaInicio": "14:00",
+    "horaFim": "17:00",
+    "horarioEstimado": true,
+    "dataEspecifica": null,
+    "vagas": 4,
+    "link": "https://www.santacasa.org.br/pagina/programa-voluntarios",
+    "fonte": "santacasa.org.br",
+    "latitude": -30.030538,
+    "longitude": -51.223153
+  },
+  {
+    "titulo": "Jardinagem com Amor: cuidado de jardins e áreas verdes da Santa Casa",
+    "descricao": "Atividade do Programa Santa Casa de Voluntariado em que voluntários cuidam de canteiros e espaços verdes usados por pacientes, familiares e equipes, ajudando a criar ambientes mais acolhedores dentro do complexo hospitalar. Não é preciso ser profissional da área; exige 21 anos ou mais, 3 h por semana e o curso preparatório.",
+    "organizacao": "Irmandade Santa Casa de Misericórdia de Porto Alegre",
+    "area": "Meio ambiente",
+    "regiao": "Porto Alegre – Centro",
+    "local": "Complexo Hospitalar Santa Casa – Rua Prof. Annes Dias, 295, Centro Histórico, Porto Alegre",
+    "diasSemana": [
+      3
+    ],
+    "horaInicio": "09:00",
+    "horaFim": "12:00",
+    "horarioEstimado": true,
+    "dataEspecifica": null,
+    "vagas": 4,
+    "link": "https://www.santacasa.org.br/pagina/programa-voluntarios",
+    "fonte": "santacasa.org.br",
+    "latitude": -30.030538,
+    "longitude": -51.223153
+  },
+  {
+    "titulo": "Visitas de apoio, conforto e orientação a pacientes (Siga-me) na Santa Casa",
+    "descricao": "Voluntários fazem visitas a pacientes internados para conversar, oferecer companhia e momentos de lazer, além de orientar pacientes e familiares no deslocamento dentro do hospital pelo serviço Siga-me. As atividades são adaptadas à faixa etária e à condição de cada paciente. Requisitos: 21 anos, não atuar como profissional de saúde, 3 h semanais e curso preparatório.",
+    "organizacao": "Irmandade Santa Casa de Misericórdia de Porto Alegre",
+    "area": "Saúde",
+    "regiao": "Porto Alegre – Centro",
+    "local": "Complexo Hospitalar Santa Casa – Centro Histórico, Porto Alegre",
+    "diasSemana": [
+      1,
+      2,
+      3,
+      4,
+      5
+    ],
+    "horaInicio": "09:00",
+    "horaFim": "12:00",
+    "horarioEstimado": true,
+    "dataEspecifica": null,
+    "vagas": 8,
+    "link": "https://www.santacasa.org.br/pagina/programa-voluntarios",
+    "fonte": "santacasa.org.br",
+    "latitude": -30.030538,
+    "longitude": -51.223153
+  },
+  {
+    "titulo": "Beleza e bem-estar para pacientes no Centro de Convivência da Santa Casa",
+    "descricao": "No Centro de Convivência, voluntários realizam cuidados simples de beleza e autoestima com pacientes e acompanhantes, como forma de acolhimento durante tratamentos longos. A ação faz parte do Programa Santa Casa de Voluntariado, coordenado pelo Serviço Social. Exige 21 anos ou mais, disponibilidade de 3 h semanais e curso preparatório.",
+    "organizacao": "Irmandade Santa Casa de Misericórdia de Porto Alegre",
+    "area": "Assistência social",
+    "regiao": "Porto Alegre – Centro",
+    "local": "Centro de Convivência – Complexo Santa Casa, Centro Histórico, Porto Alegre",
+    "diasSemana": [
+      2,
+      4
+    ],
+    "horaInicio": "09:00",
+    "horaFim": "12:00",
+    "horarioEstimado": true,
+    "dataEspecifica": null,
+    "vagas": 4,
+    "link": "https://www.santacasa.org.br/pagina/programa-voluntarios",
+    "fonte": "santacasa.org.br",
+    "latitude": -30.030538,
+    "longitude": -51.223153
+  },
+  {
+    "titulo": "Recreação com crianças e adolescentes em tratamento de câncer (ICI)",
+    "descricao": "O núcleo de Recreação do Instituto do Câncer Infantil leva brincadeiras e atividades lúdicas para crianças e adolescentes em tratamento oncológico e seus irmãos. O voluntário atua cerca de 3 horas por dia, uma vez por semana, após processo seletivo e treinamento específico do núcleo.",
+    "organizacao": "Instituto do Câncer Infantil (ICI)",
+    "area": "Esporte e lazer",
+    "regiao": "Porto Alegre – Centro",
+    "local": "Sede do ICI, junto ao Hospital de Clínicas – Porto Alegre",
+    "diasSemana": [
+      3
+    ],
+    "horaInicio": "14:00",
+    "horaFim": "17:00",
+    "horarioEstimado": true,
+    "dataEspecifica": null,
+    "vagas": 6,
+    "link": "https://www.ici.ong/voluntariado/",
+    "fonte": "ici.ong",
+    "latitude": -30.038678,
+    "longitude": -51.206625
+  },
+  {
+    "titulo": "Apoio pedagógico a pacientes do Instituto do Câncer Infantil",
+    "descricao": "Voluntários com formação em Letras, Matemática, Pedagogia/alfabetização ou áreas afins ajudam crianças e adolescentes em tratamento a acompanhar os conteúdos escolares. A dedicação média é de 3 horas, uma vez por semana, e a entrada ocorre por seleção conforme abertura de vagas, com treinamento do núcleo.",
+    "organizacao": "Instituto do Câncer Infantil (ICI)",
+    "area": "Educação",
+    "regiao": "Porto Alegre – Centro",
+    "local": "Sede do ICI, junto ao Hospital de Clínicas – Porto Alegre",
+    "diasSemana": [
+      2
+    ],
+    "horaInicio": "14:00",
+    "horaFim": "17:00",
+    "horarioEstimado": true,
+    "dataEspecifica": null,
+    "vagas": 4,
+    "link": "https://www.ici.ong/voluntariado/",
+    "fonte": "ici.ong",
+    "latitude": -30.038678,
+    "longitude": -51.206625
+  },
+  {
+    "titulo": "Oficinas de artesanato e geração de renda para mães de pacientes (ICI)",
+    "descricao": "No núcleo de Oficinas do ICI, voluntários conduzem atividades de artesanato com mães e cuidadoras de crianças em tratamento, que podem gerar renda complementar para as famílias. É uma forma de oferecer convivência e ocupação durante o período de tratamento. Carga média de 3 h semanais, com seleção e treinamento.",
+    "organizacao": "Instituto do Câncer Infantil (ICI)",
+    "area": "Cultura",
+    "regiao": "Porto Alegre – Centro",
+    "local": "Sede do ICI, junto ao Hospital de Clínicas – Porto Alegre",
+    "diasSemana": [
+      4
+    ],
+    "horaInicio": "14:00",
+    "horaFim": "17:00",
+    "horarioEstimado": true,
+    "dataEspecifica": null,
+    "vagas": 4,
+    "link": "https://www.ici.ong/voluntariado/",
+    "fonte": "ici.ong",
+    "latitude": -30.038678,
+    "longitude": -51.206625
+  },
+  {
+    "titulo": "Núcleo de Eventos e Atividades Festivas do Instituto do Câncer Infantil",
+    "descricao": "O voluntário ajuda a organizar e executar eventos de mobilização e festas comemorativas do ICI, como datas especiais para as crianças atendidas e ações de captação de recursos. Envolve recepção do público, montagem e apoio logístico. A participação passa por processo seletivo e treinamento do núcleo.",
+    "organizacao": "Instituto do Câncer Infantil (ICI)",
+    "area": "Eventos",
+    "regiao": "Porto Alegre – Centro",
+    "local": "Sede do ICI e locais de eventos em Porto Alegre",
+    "diasSemana": [
+      6
+    ],
+    "horaInicio": "09:00",
+    "horaFim": "13:00",
+    "horarioEstimado": true,
+    "dataEspecifica": null,
+    "vagas": 10,
+    "link": "https://www.ici.ong/voluntariado/",
+    "fonte": "ici.ong",
+    "latitude": -30.038678,
+    "longitude": -51.206625
+  },
+  {
+    "titulo": "Brechó e triagem de doações do Instituto do Câncer Infantil",
+    "descricao": "Nos núcleos de Brechó e Triagem de Doações, voluntários recebem, separam e organizam roupas e objetos doados e atendem no brechó, cuja renda ajuda a manter o atendimento a crianças com câncer e suas famílias. Atividade indicada para quem gosta de organização; cerca de 3 h, uma vez por semana.",
+    "organizacao": "Instituto do Câncer Infantil (ICI)",
+    "area": "Assistência social",
+    "regiao": "Porto Alegre – Centro",
+    "local": "Sede do ICI, junto ao Hospital de Clínicas – Porto Alegre",
+    "diasSemana": [
+      1,
+      3,
+      5
+    ],
+    "horaInicio": "09:00",
+    "horaFim": "12:00",
+    "horarioEstimado": true,
+    "dataEspecifica": null,
+    "vagas": 6,
+    "link": "https://www.ici.ong/voluntariado/",
+    "fonte": "ici.ong",
+    "latitude": -30.038678,
+    "longitude": -51.206625
+  },
+  {
+    "titulo": "Campanhas de arrecadação de alimentos do Banco de Alimentos do RS",
+    "descricao": "O Banco de Alimentos do Rio Grande do Sul recolhe doações e as repassa a entidades sociais cadastradas. Voluntários individuais, estudantes e grupos como clubes de serviço e escoteiros participam das campanhas de arrecadação e de outras ações organizadas pela instituição, ajudando a combater a fome e o desperdício.",
+    "organizacao": "Banco de Alimentos do Rio Grande do Sul",
+    "area": "Eventos",
+    "regiao": "Porto Alegre – Zona Norte",
+    "local": "Av. Francisco Silveira Bitencourt, 1928 – Sarandi, Porto Alegre",
+    "diasSemana": [
+      6
+    ],
+    "horaInicio": "09:00",
+    "horaFim": "13:00",
+    "horarioEstimado": true,
+    "dataEspecifica": null,
+    "vagas": 10,
+    "link": "https://www.bancodealimentosrs.org.br/Secao/7/Como-Participar",
+    "fonte": "bancodealimentosrs.org.br",
+    "latitude": -29.993898,
+    "longitude": -51.122296
+  },
+  {
+    "titulo": "Voluntariado na Fundação Pão dos Pobres com crianças, adolescentes e jovens",
+    "descricao": "A Fundação Pão dos Pobres atende crianças, adolescentes e jovens em situação de vulnerabilidade com acolhimento, educação e qualificação profissional. A instituição recebe voluntários para apoiar suas atividades socioeducativas e administrativas; o interessado se candidata pelo canal de voluntariado indicado no site.",
+    "organizacao": "Fundação Pão dos Pobres",
+    "area": "Assistência social",
+    "regiao": "Porto Alegre – Centro",
+    "local": "Rua da República, 801 – Cidade Baixa, Porto Alegre",
+    "diasSemana": [
+      1,
+      2,
+      3,
+      4,
+      5
+    ],
+    "horaInicio": "08:00",
+    "horaFim": "12:00",
+    "horarioEstimado": true,
+    "dataEspecifica": null,
+    "vagas": 5,
+    "link": "https://www.paodospobres.org.br/",
+    "fonte": "paodospobres.org.br",
+    "latitude": -30.040548,
+    "longitude": -51.227444
+  },
+  {
+    "titulo": "Convivência e apoio a crianças e jovens com deficiências múltiplas no Kinder",
+    "descricao": "O Kinder – Centro de Integração da Criança Especial atende crianças e jovens com deficiências múltiplas. A instituição convida voluntários a dedicar tempo, carinho e atenção aos atendidos, apoiando atividades do dia a dia; as vagas disponíveis são informadas pelo setor de voluntariado.",
+    "organizacao": "Kinder – Centro de Integração da Criança Especial",
+    "area": "Assistência social",
+    "regiao": "Porto Alegre – Zona Leste",
+    "local": "Rua Marcone, 421 – Partenon, Porto Alegre",
+    "diasSemana": [
+      2,
+      4
+    ],
+    "horaInicio": "09:00",
+    "horaFim": "12:00",
+    "horarioEstimado": true,
+    "dataEspecifica": null,
+    "vagas": 4,
+    "link": "https://kinder.org.br/como-ajudar/",
+    "fonte": "kinder.org.br",
+    "latitude": -30.059094,
+    "longitude": -51.160208
+  },
+  {
+    "titulo": "Profissionais voluntários no apoio a pacientes com câncer de mama (IMAMA)",
+    "descricao": "O Instituto da Mama do RS mantém serviços prestados por voluntários, como psicologia, orientação jurídica, nutrição, fisioterapia, micropigmentação e terapias complementares (meditação e Reiki). Profissionais dessas áreas podem atender pacientes cadastradas e seus familiares durante o tratamento.",
+    "organizacao": "IMAMA – Instituto da Mama do Rio Grande do Sul",
+    "area": "Saúde",
+    "regiao": "Porto Alegre – Centro",
+    "local": "Rua Dr. Vale, 157 – Floresta, Porto Alegre",
+    "diasSemana": [
+      2,
+      4
+    ],
+    "horaInicio": "14:00",
+    "horaFim": "17:00",
+    "horarioEstimado": true,
+    "dataEspecifica": null,
+    "vagas": 3,
+    "link": "https://www.imama.org.br/",
+    "fonte": "imama.org.br",
+    "latitude": -30.025929,
+    "longitude": -51.206785
+  },
+  {
+    "titulo": "Apoio a imigrantes e refugiados na Associação dos Angolanos do RS",
+    "descricao": "A associação acolhe imigrantes e refugiados em Porto Alegre, com apoio em documentação, inserção no trabalho e doações. Voluntários ajudam nas atividades de acolhimento e atendimento ao público, contribuindo para a integração dessas famílias à cidade.",
+    "organizacao": "Associação dos Angolanos no Rio Grande do Sul (AAARS)",
+    "area": "Assistência social",
+    "regiao": "Porto Alegre – Zona Leste",
+    "local": "Rua Sd. José da Silva, 526 – Agronomia, Porto Alegre",
+    "diasSemana": [
+      6
+    ],
+    "horaInicio": "09:00",
+    "horaFim": "12:00",
+    "horarioEstimado": true,
+    "dataEspecifica": null,
+    "vagas": 5,
+    "link": "https://www.associacaodosangolanos.ong.br/trabalho-voluntario-ong-porto-alegre",
+    "fonte": "associacaodosangolanos.ong.br"
+  },
+  {
+    "titulo": "Entrega de lanches e acolhimento a pacientes em hospitais e UBS (SOS Resgatando Vidas)",
+    "descricao": "O projeto leva lanches e palavras de conforto a pacientes e acompanhantes em unidades básicas de saúde e hospitais de Porto Alegre e região metropolitana. Também mantém frentes com crianças, famílias e alfabetização de adultos. O voluntário participa das saídas de distribuição e do contato com o público atendido.",
+    "organizacao": "SOS Resgatando Vidas",
+    "area": "Saúde",
+    "regiao": "Porto Alegre – Zona Leste",
+    "local": "Rua Três, 176 (CEP 91450-740) – Porto Alegre; ações em UBS e hospitais",
+    "diasSemana": [
+      6
+    ],
+    "horaInicio": "08:00",
+    "horaFim": "12:00",
+    "horarioEstimado": true,
+    "dataEspecifica": null,
+    "vagas": 8,
+    "link": "https://www.sosresgatandovidas.ong.br/seja-um-voluntario",
+    "fonte": "sosresgatandovidas.ong.br"
+  },
+  {
+    "titulo": "Acolhimento e oficinas com migrantes e refugiados na REIDE",
+    "descricao": "A REIDE busca voluntários para fortalecer a comunidade migrante, refugiada e apátrida na Zona Norte. As tarefas incluem recepção de participantes, organização de eventos e oficinas, apoio administrativo, divulgação e auxílio em atividades educativas e culturais. A carga horária é flexível, a partir de 1 hora semanal.",
+    "organizacao": "REIDE – Rede de Integração e Desenvolvimento de Migrantes, Refugiados e Apátridas",
+    "area": "Assistência social",
+    "regiao": "Porto Alegre – Zona Norte",
+    "local": "Av. João Elustondo Filho, 100 – Santa Rosa de Lima, Porto Alegre",
+    "diasSemana": [
+      6
+    ],
+    "horaInicio": "09:00",
+    "horaFim": "12:00",
+    "horarioEstimado": true,
+    "dataEspecifica": null,
+    "vagas": 9,
+    "link": "https://www.atados.com.br/vaga/voluntariado-reide-313539",
+    "fonte": "Atados",
+    "latitude": -29.981862,
+    "longitude": -51.109075
+  },
+  {
+    "titulo": "Podólogo(a) voluntário(a) para idosos residentes da Rede Calábria",
+    "descricao": "A Rede Calábria procura podólogo(a) para atender idosos de uma de suas instituições de longa permanência. O voluntário cuida de unhas e pés conforme a necessidade de cada residente e orienta sobre cuidados adequados, com atendimento humanizado e paciente. Dedicação de cerca de 1 hora semanal, conforme disponibilidade.",
+    "organizacao": "Instituto Pobres Servos da Divina Providência – Rede Calábria",
+    "area": "Saúde",
+    "regiao": "Porto Alegre – Zona Sul",
+    "local": "Estrada Aracaju, 650 – Vila Nova, Porto Alegre",
+    "diasSemana": [
+      2
+    ],
+    "horaInicio": "09:00",
+    "horaFim": "10:00",
+    "horarioEstimado": true,
+    "dataEspecifica": null,
+    "vagas": 2,
+    "link": "https://www.atados.com.br/vaga/voluntario-a-podologo-a-atendimento-353539",
+    "fonte": "Atados",
+    "latitude": -30.10207,
+    "longitude": -51.211925
+  },
+  {
+    "titulo": "Revestimento térmico de casas com caixas de leite (Brasil Sem Frestas)",
+    "descricao": "Equipes voluntárias transformam embalagens longa vida em placas que revestem moradias de famílias vulneráveis, deixando as casas mais quentes no inverno. O voluntário ajuda a preparar materiais e a instalar as placas nas comunidades atendidas, sem precisar de experiência prévia. As ações ocorrem em manhãs de terça ou quarta-feira.",
+    "organizacao": "Associação Brasil Sem Frestas Porto Alegre",
+    "area": "Meio ambiente",
+    "regiao": "Porto Alegre – Centro",
+    "local": "Rua Santana, 1225, 2º andar – Farroupilha, Porto Alegre (ações em vários bairros)",
+    "diasSemana": [
+      2,
+      3
+    ],
+    "horaInicio": "08:30",
+    "horaFim": "12:00",
+    "horarioEstimado": true,
+    "dataEspecifica": null,
+    "vagas": 12,
+    "link": "https://www.atados.com.br/vaga/revestir-lares-com-frestas-383332",
+    "fonte": "Atados",
+    "latitude": -30.052268,
+    "longitude": -51.204913
+  },
+  {
+    "titulo": "Atividades educativas com crianças enquanto mães são atendidas (Instituto C)",
+    "descricao": "No polo do Instituto C em Belém Velho, o voluntário acolhe e acompanha crianças com brincadeiras, jogos e atividades educativas enquanto mães e cuidadoras participam de atendimentos e projetos. A proposta é oferecer um ambiente seguro e afetivo, adaptando as atividades a cada criança. Atuação às quartas-feiras, cerca de 3 h por semana.",
+    "organizacao": "Instituto C",
+    "area": "Educação",
+    "regiao": "Porto Alegre – Zona Sul",
+    "local": "Estrada do Rincão, 4060 – Belém Velho, Porto Alegre",
+    "diasSemana": [
+      3
+    ],
+    "horaInicio": "14:00",
+    "horaFim": "17:00",
+    "horarioEstimado": true,
+    "dataEspecifica": null,
+    "vagas": 1,
+    "link": "https://www.atados.com.br/vaga/apoio-pedagogico-polo-porto-alegre-383935",
+    "fonte": "Atados",
+    "latitude": -30.14235,
+    "longitude": -51.125978
+  },
+  {
+    "titulo": "Professor(a) voluntário(a) no Cursinho Popular Pré-Enem Lanceiros Negros",
+    "descricao": "O cursinho popular oferece aulas gratuitas de preparação para o Enem a jovens e adultos da Zona Norte. Busca professores voluntários para as aulas presenciais de sábado pela manhã, que seguem até novembro. Há auxílio-transporte e possibilidade de certificação de horas de extensão por projeto vinculado à UFRGS.",
+    "organizacao": "Cursinho Popular Pré-Enem Lanceiros Negros (Espaço Marlon e Marcelinho)",
+    "area": "Educação",
+    "regiao": "Porto Alegre – Zona Norte",
+    "local": "R. Prof. Augusto Osvaldo Thiesen, 40 – Rubem Berta, Porto Alegre",
+    "diasSemana": [
+      6
+    ],
+    "horaInicio": "08:30",
+    "horaFim": "12:00",
+    "horarioEstimado": true,
+    "dataEspecifica": null,
+    "vagas": 6,
+    "link": "https://www.ufrgs.br/prorext/cursinho-popular-lanceiros-negros-abre-inscricoes-para-estudantes-e-professores-voluntarios",
+    "fonte": "UFRGS – Pró-Reitoria de Extensão"
+  },
+  {
+    "titulo": "Visitas de palhaços voluntários a hospitais, asilos e abrigos (Viver de Rir)",
+    "descricao": "A Viver de Rir leva alegria e cuidado humanizado por meio da figura do palhaço a pessoas internadas em hospitais e também a asilos, abrigos e pessoas em situação de rua. Os voluntários participam das visitas e de campanhas de doação de alimentos, agasalhos e presentes.",
+    "organizacao": "Viver de Rir",
+    "area": "Saúde",
+    "regiao": "Porto Alegre – Zona Norte",
+    "local": "Av. Assis Brasil, 3257 – Passo d'Areia, Porto Alegre",
+    "diasSemana": [
+      0
+    ],
+    "horaInicio": "14:00",
+    "horaFim": "17:00",
+    "horarioEstimado": true,
+    "dataEspecifica": null,
+    "vagas": 6,
+    "link": "https://www.atados.com.br/ong/viver-de-rir",
+    "fonte": "Atados (perfil da ONG)",
+    "latitude": -29.978579,
+    "longitude": -51.114694
+  },
+  {
+    "titulo": "Bike Anjo: ensinar adultos e crianças a pedalar com segurança",
+    "descricao": "O Bike Anjo Porto Alegre é uma rede de voluntários que incentiva o uso da bicicleta na cidade. Os voluntários ensinam pessoas a pedalar, acompanham novos ciclistas no trânsito e participam de ações por uma cidade mais ciclável.",
+    "organizacao": "Bike Anjo Porto Alegre",
+    "area": "Esporte e lazer",
+    "regiao": "Porto Alegre – Centro",
+    "local": "Parques e ruas de Porto Alegre (encontros na região central)",
+    "diasSemana": [
+      0
+    ],
+    "horaInicio": "09:00",
+    "horaFim": "12:00",
+    "horarioEstimado": true,
+    "dataEspecifica": null,
+    "vagas": 8,
+    "link": "https://www.atados.com.br/ong/bike-anjo-porto-alegre",
+    "fonte": "Atados (perfil da ONG)"
+  },
+  {
+    "titulo": "Educação ambiental sobre separação de resíduos em feiras (Lixo Zero Porto Alegre)",
+    "descricao": "O Instituto Lixo Zero Porto Alegre promove educação ambiental com a Mesa de Práticas Sustentáveis em feiras e eventos, ensinando a população a separar resíduos corretamente, e apoia associações de catadores. Voluntários atuam no atendimento ao público e na organização das ações, inclusive na Semana Lixo Zero.",
+    "organizacao": "Instituto Lixo Zero Porto Alegre",
+    "area": "Meio ambiente",
+    "regiao": "Porto Alegre – Centro",
+    "local": "Feiras e eventos em Porto Alegre",
+    "diasSemana": [
+      6
+    ],
+    "horaInicio": "09:00",
+    "horaFim": "13:00",
+    "horarioEstimado": true,
+    "dataEspecifica": null,
+    "vagas": 6,
+    "link": "https://www.atados.com.br/ong/instituto-lixo-zero-porto-alegre-393838",
+    "fonte": "Atados (perfil da ONG)"
+  },
+  {
+    "titulo": "Limpeza de margens e proteção da vida aquática com a Sea Shepherd Brasil",
+    "descricao": "A Sea Shepherd Brasil, com sede em Porto Alegre, atua na conservação de ecossistemas aquáticos e costeiros. Pela campanha Ondas Limpas, voluntários participam de mutirões de remoção de lixo e de ações educativas para reduzir a entrada de plástico na água e proteger a fauna.",
+    "organizacao": "Sea Shepherd Brasil",
+    "area": "Proteção animal",
+    "regiao": "Porto Alegre – Zona Sul",
+    "local": "Orla e áreas ribeirinhas de Porto Alegre",
+    "diasSemana": [
+      6
+    ],
+    "horaInicio": "08:00",
+    "horaFim": "12:00",
+    "horarioEstimado": true,
+    "dataEspecifica": null,
+    "vagas": 10,
+    "link": "https://www.atados.com.br/ong/sea-shepherd-brasil",
+    "fonte": "Atados (perfil da ONG)"
+  },
+  {
+    "titulo": "Apoio educativo a crianças e jovens na Pequena Casa da Criança",
+    "descricao": "Fundada em 1956 na Vila Maria da Conceição, a Pequena Casa da Criança atua com educação, assistência social e profissionalização de crianças, jovens e famílias. Voluntários podem apoiar atividades educativas e oficinas no contraturno escolar.",
+    "organizacao": "Pequena Casa da Criança",
+    "area": "Educação",
+    "regiao": "Porto Alegre – Zona Leste",
+    "local": "Rua Mario de Artagão, 13 – Partenon (Vila Maria da Conceição), Porto Alegre",
+    "diasSemana": [
+      2,
+      4
+    ],
+    "horaInicio": "14:00",
+    "horaFim": "17:00",
+    "horarioEstimado": true,
+    "dataEspecifica": null,
+    "vagas": 5,
+    "link": "https://www.atados.com.br/ong/pequena-casa-da-crianca-353830",
+    "fonte": "Atados (perfil da ONG)",
+    "latitude": -30.065437,
+    "longitude": -51.194292
+  },
+  {
+    "titulo": "Convivência com idosos e oficinas para crianças no Amparo Santa Cruz",
+    "descricao": "O Amparo Santa Cruz Orionita mantém educação infantil, oficinas culturais, esportivas e pedagógicas no contraturno escolar e uma instituição de longa permanência para idosos. Voluntários podem apoiar as oficinas com crianças e adolescentes ou fazer companhia e atividades com os idosos.",
+    "organizacao": "Amparo Santa Cruz Orionita",
+    "area": "Assistência social",
+    "regiao": "Porto Alegre – Zona Sul",
+    "local": "Estr. Costa Gama, 719 – Belém Velho, Porto Alegre",
+    "diasSemana": [
+      3,
+      5
+    ],
+    "horaInicio": "14:00",
+    "horaFim": "17:00",
+    "horarioEstimado": true,
+    "dataEspecifica": null,
+    "vagas": 5,
+    "link": "https://www.atados.com.br/ong/amparo-santa-cruz-orionita-343137",
+    "fonte": "Atados (perfil da ONG)",
+    "latitude": -30.135264,
+    "longitude": -51.175163
+  },
+  {
+    "titulo": "Oficinas de cultura e arte com crianças e jovens na Aldeia da Fraternidade",
+    "descricao": "A Aldeia da Fraternidade atende bebês, crianças, jovens e a comunidade em situação de vulnerabilidade com atividades de cultura e arte, esporte e lazer e educação para a sustentabilidade. Voluntários podem contribuir com oficinas e apoio às atividades do contraturno.",
+    "organizacao": "Aldeia da Fraternidade",
+    "area": "Cultura",
+    "regiao": "Porto Alegre – Zona Sul",
+    "local": "Rua Dona Paulina, 700 – Tristeza, Porto Alegre",
+    "diasSemana": [
+      2,
+      4
+    ],
+    "horaInicio": "14:00",
+    "horaFim": "17:00",
+    "horarioEstimado": true,
+    "dataEspecifica": null,
+    "vagas": 5,
+    "link": "https://www.atados.com.br/ong/aldeia-da-fraternidade",
+    "fonte": "Atados (perfil da ONG)",
+    "latitude": -30.117577,
+    "longitude": -51.246469
+  },
+  {
+    "titulo": "Apoio à integração de migrantes no CIBAI Migrações",
+    "descricao": "Há mais de 60 anos, o CIBAI Migrações apoia migrantes em Porto Alegre com integração ao trabalho, capacitação, documentação e assistência jurídica e psicológica. Voluntários ajudam no atendimento, em capacitações e no apoio à busca de emprego.",
+    "organizacao": "CIBAI Migrações",
+    "area": "Assistência social",
+    "regiao": "Porto Alegre – Centro",
+    "local": "Rua Doutor Barros Cassal, 220 – Floresta, Porto Alegre",
+    "diasSemana": [
+      1,
+      3
+    ],
+    "horaInicio": "14:00",
+    "horaFim": "17:00",
+    "horarioEstimado": true,
+    "dataEspecifica": null,
+    "vagas": 5,
+    "link": "https://www.atados.com.br/ong/cibai-migracoes-303530",
+    "fonte": "Atados (perfil da ONG)",
+    "latitude": -30.027446,
+    "longitude": -51.21689
+  },
+  {
+    "titulo": "Mediação de leitura e bibliotecas comunitárias com a ONG Cirandar",
+    "descricao": "A Cirandar desenvolve projetos de acesso ao livro e à leitura e de valorização da cultura popular, articulando a rede de bibliotecas comunitárias de Porto Alegre. Voluntários podem apoiar mediação de leitura, organização de acervos e atividades culturais nas comunidades.",
+    "organizacao": "Cirandar",
+    "area": "Cultura",
+    "regiao": "Porto Alegre – Centro",
+    "local": "R. dos Andradas, 1780 – Centro Histórico, Porto Alegre",
+    "diasSemana": [
+      3
+    ],
+    "horaInicio": "14:00",
+    "horaFim": "17:00",
+    "horarioEstimado": true,
+    "dataEspecifica": null,
+    "vagas": 4,
+    "link": "https://www.atados.com.br/ong/cirandar",
+    "fonte": "Atados (perfil da ONG)",
+    "latitude": -30.029553,
+    "longitude": -51.223748
+  },
+  {
+    "titulo": "Apoio a pessoas com esclerose múltipla na AGAPEM",
+    "descricao": "A Associação Gaúcha de Pessoas com Esclerose Múltipla acolhe pacientes e familiares com informação, grupos de apoio e atividades de convivência. Voluntários ajudam no acolhimento, na organização de encontros e em ações de conscientização sobre a doença.",
+    "organizacao": "AGAPEM – Associação Gaúcha de Pessoas com Esclerose Múltipla",
+    "area": "Saúde",
+    "regiao": "Porto Alegre – Centro",
+    "local": "Rua Chaves Barcellos, 36 – Centro Histórico, Porto Alegre",
+    "diasSemana": [
+      4
+    ],
+    "horaInicio": "14:00",
+    "horaFim": "17:00",
+    "horarioEstimado": true,
+    "dataEspecifica": null,
+    "vagas": 3,
+    "link": "https://www.atados.com.br/ong/agapem-associacao-gaucha-de-pessoas-com-eslcerose-multipla",
+    "fonte": "Atados (perfil da ONG)"
+  },
+  {
+    "titulo": "Ações educativas e de conscientização pelos direitos animais (Princípio Animal)",
+    "descricao": "A Princípio Animal atua junto ao poder público por leis de proteção aos animais e conscientiza a sociedade sobre a exploração animal. Voluntários participam de ações educativas, campanhas, protestos pacíficos e apoio à comunicação da organização.",
+    "organizacao": "Princípio Animal",
+    "area": "Proteção animal",
+    "regiao": "Porto Alegre – Centro",
+    "local": "Av. Carlos Gomes, 111 – Auxiliadora, Porto Alegre",
+    "diasSemana": [
+      6
+    ],
+    "horaInicio": "10:00",
+    "horaFim": "13:00",
+    "horarioEstimado": true,
+    "dataEspecifica": null,
+    "vagas": 5,
+    "link": "https://www.atados.com.br/ong/principio-animal-323734",
+    "fonte": "Atados (perfil da ONG)",
+    "latitude": -30.023231,
+    "longitude": -51.184365
+  },
+  {
+    "titulo": "Eventos, transporte de animais e doações na Patas Dadas",
+    "descricao": "A Patas Dadas resgata e encaminha cães para adoção em Porto Alegre. Hoje, a principal frente de voluntariado são os eventos da ONG, além de transporte de animais, organização de doações e apoio em design gráfico e no site. O interessado se candidata pelo e-mail de voluntários indicado na página.",
+    "organizacao": "Patas Dadas",
+    "area": "Proteção animal",
+    "regiao": "Porto Alegre – Centro",
+    "local": "Eventos em diferentes pontos de Porto Alegre",
+    "diasSemana": [
+      6
+    ],
+    "horaInicio": "10:00",
+    "horaFim": "16:00",
+    "horarioEstimado": true,
+    "dataEspecifica": null,
+    "vagas": 6,
+    "link": "https://www.patasdadas.com.br/como-ajudar",
+    "fonte": "patasdadas.com.br"
+  },
+  {
+    "titulo": "Jornada do Voluntário: encontre uma causa e uma ONG parceira (online)",
+    "descricao": "A ONG Parceiros Voluntários, sediada em Porto Alegre, oferece um questionário online em que a pessoa escolhe causa, tipo de atividade e tempo disponível. Depois, é encaminhada a organizações da sociedade civil parceiras que precisam de voluntários no RS.",
+    "organizacao": "ONG Parceiros Voluntários",
+    "area": "Assistência social",
+    "regiao": "Online (remoto)",
+    "local": "Online",
+    "diasSemana": [
+      1,
+      2,
+      3,
+      4,
+      5
+    ],
+    "horaInicio": "19:00",
+    "horaFim": "20:00",
+    "horarioEstimado": true,
+    "dataEspecifica": null,
+    "vagas": 10,
+    "link": "https://parceirosvoluntarios.org.br/voluntario/",
+    "fonte": "parceirosvoluntarios.org.br"
+  },
+  {
+    "titulo": "Cadastro de voluntários da Parceiros Voluntários Canoas para entidades locais",
+    "descricao": "Braço social da CICS Canoas, a Parceiros Voluntários Canoas apoia organizações sociais da cidade e mantém programas como o Formando para o Futuro, com estudantes da rede pública. Pelo formulário 'Quero ser voluntário', o interessado é encaminhado a projetos e entidades parceiras do município.",
+    "organizacao": "Parceiros Voluntários Canoas (CICS Canoas)",
+    "area": "Assistência social",
+    "regiao": "Canoas",
+    "local": "Rua Ipiranga, 95, 9º andar – Centro, Canoas",
+    "diasSemana": [
+      1,
+      2,
+      3,
+      4,
+      5
+    ],
+    "horaInicio": "14:00",
+    "horaFim": "17:00",
+    "horarioEstimado": true,
+    "dataEspecifica": null,
+    "vagas": 10,
+    "link": "https://www.cicscanoas.com.br/parceiros-voluntarios",
+    "fonte": "cicscanoas.com.br"
+  },
+  {
+    "titulo": "Apoio a pessoas com deficiência visual na ADEVIC",
+    "descricao": "A Associação dos Deficientes Visuais de Canoas oferece habilitação, reabilitação, orientação e mobilidade e atendimento educacional especializado a pessoas com deficiência visual, da infância à terceira idade. Voluntários podem apoiar atividades educativas, leitura e acompanhamento dos atendidos.",
+    "organizacao": "ADEVIC – Associação dos Deficientes Visuais de Canoas",
+    "area": "Educação",
+    "regiao": "Canoas",
+    "local": "Rua Maceió, 17 – Mathias Velho, Canoas",
+    "diasSemana": [
+      2,
+      4
+    ],
+    "horaInicio": "14:00",
+    "horaFim": "17:00",
+    "horarioEstimado": true,
+    "dataEspecifica": null,
+    "vagas": 4,
+    "link": "https://www.atados.com.br/ong/associacao-dos-deficientes-visuais-de-canoas-303433",
+    "fonte": "Atados (perfil da ONG)",
+    "latitude": -29.903431,
+    "longitude": -51.185172
+  },
+  {
+    "titulo": "Atividades assistidas por cães com pessoas com deficiência (ONG CãoTerapia)",
+    "descricao": "Fundada em Canoas em 2018, a ONG CãoTerapia promove atividades dirigidas com cães para pessoas com deficiência e dificuldades cognitivas ou comportamentais, envolvendo também suas famílias. Voluntários ajudam na condução das sessões, no cuidado com os cães e na organização dos encontros.",
+    "organizacao": "ONG CãoTerapia",
+    "area": "Saúde",
+    "regiao": "Canoas",
+    "local": "Canoas – RS",
+    "diasSemana": [
+      6
+    ],
+    "horaInicio": "09:00",
+    "horaFim": "12:00",
+    "horarioEstimado": true,
+    "dataEspecifica": null,
+    "vagas": 4,
+    "link": "https://www.atados.com.br/ong/ong-caoterapia",
+    "fonte": "Atados (perfil da ONG)"
+  },
+  {
+    "titulo": "Escotista voluntário no Grupo Escoteiro Tibiriçá",
+    "descricao": "Os grupos escoteiros dependem de adultos voluntários (a partir de 21 anos) para conduzir atividades educativas ao ar livre com crianças e jovens, com formação continuada oferecida pelos Escoteiros do Brasil. O Grupo Tibiriçá funciona no Centro de Canoas; o contato com o grupo é intermediado pela secretaria regional.",
+    "organizacao": "Escoteiros do Brasil – Grupo Escoteiro Tibiriçá (059/RS)",
+    "area": "Esporte e lazer",
+    "regiao": "Canoas",
+    "local": "Av. Victor Barreto, 2288 – Centro, Canoas",
+    "diasSemana": [
+      6
+    ],
+    "horaInicio": "14:00",
+    "horaFim": "17:30",
+    "horarioEstimado": true,
+    "dataEspecifica": null,
+    "vagas": 3,
+    "link": "https://www.escoteirosrs.org.br/grupos",
+    "fonte": "escoteirosrs.org.br",
+    "latitude": -29.917144,
+    "longitude": -51.181168
+  },
+  {
+    "titulo": "Escotista voluntário no Grupo Escoteiro do Ar 14-bis",
+    "descricao": "Adultos voluntários conduzem atividades do escotismo do ar, como jogos, acampamentos e projetos educativos, para crianças e jovens. O 14-bis fica no bairro Nossa Senhora das Graças, em Canoas. Exige 21 anos ou mais e participação na formação de voluntários.",
+    "organizacao": "Escoteiros do Brasil – Grupo Escoteiro do Ar 14-bis (008/RS)",
+    "area": "Esporte e lazer",
+    "regiao": "Canoas",
+    "local": "Rua Tobias Barreto, 990 – Nossa Senhora das Graças, Canoas",
+    "diasSemana": [
+      6
+    ],
+    "horaInicio": "14:00",
+    "horaFim": "17:30",
+    "horarioEstimado": true,
+    "dataEspecifica": null,
+    "vagas": 3,
+    "link": "https://www.escoteirosrs.org.br/grupos",
+    "fonte": "escoteirosrs.org.br",
+    "latitude": -29.935261,
+    "longitude": -51.160474
+  },
+  {
+    "titulo": "Escotista voluntário no Grupo Escoteiro do Ar Canoas (Mato Grande)",
+    "descricao": "O grupo recebe adultos voluntários para planejar e acompanhar atividades ao ar livre, de cidadania e de convivência com crianças e adolescentes do bairro Mato Grande e arredores. A entrada é a partir de 21 anos, com formação oferecida pelos Escoteiros do Brasil.",
+    "organizacao": "Escoteiros do Brasil – Grupo Escoteiro do Ar Canoas (095/RS)",
+    "area": "Esporte e lazer",
+    "regiao": "Canoas",
+    "local": "Beco dos Pachecos, 400 – Mato Grande, Canoas",
+    "diasSemana": [
+      6
+    ],
+    "horaInicio": "14:00",
+    "horaFim": "17:30",
+    "horarioEstimado": true,
+    "dataEspecifica": null,
+    "vagas": 3,
+    "link": "https://www.escoteirosrs.org.br/grupos",
+    "fonte": "escoteirosrs.org.br"
+  },
+  {
+    "titulo": "Escotista voluntário no Grupo Escoteiro Ouro Negro",
+    "descricao": "Adultos voluntários ajudam a conduzir as atividades semanais do grupo, com jogos, técnicas de acampamento e projetos comunitários para crianças e jovens do bairro São José, em Canoas. Exige 21 anos ou mais e formação inicial de voluntários.",
+    "organizacao": "Escoteiros do Brasil – Grupo Escoteiro Ouro Negro (207/RS)",
+    "area": "Esporte e lazer",
+    "regiao": "Canoas",
+    "local": "Av. Getúlio Vargas, 11001 – São José, Canoas",
+    "diasSemana": [
+      6
+    ],
+    "horaInicio": "14:00",
+    "horaFim": "17:30",
+    "horarioEstimado": true,
+    "dataEspecifica": null,
+    "vagas": 3,
+    "link": "https://www.escoteirosrs.org.br/grupos",
+    "fonte": "escoteirosrs.org.br",
+    "latitude": -29.95671,
+    "longitude": -51.176116
+  },
+  {
+    "titulo": "Escotista voluntário no Grupo Escoteiro Mboaba (Igara)",
+    "descricao": "O Grupo Escoteiro Mboaba, no Jardim Igara, recebe adultos para atuar como escotistas ou no apoio à gestão e aos eventos do grupo. As atividades unem educação, natureza e serviço comunitário para crianças e jovens. Idade mínima de 21 anos.",
+    "organizacao": "Escoteiros do Brasil – Grupo Escoteiro Mboaba (223/RS)",
+    "area": "Esporte e lazer",
+    "regiao": "Canoas",
+    "local": "Rua das Azaléias, 189 – Jardim Igara II, Canoas",
+    "diasSemana": [
+      6
+    ],
+    "horaInicio": "14:00",
+    "horaFim": "17:30",
+    "horarioEstimado": true,
+    "dataEspecifica": null,
+    "vagas": 3,
+    "link": "https://www.escoteirosrs.org.br/grupos",
+    "fonte": "escoteirosrs.org.br",
+    "latitude": -29.899733,
+    "longitude": -51.158475
+  },
+  {
+    "titulo": "Escotista voluntário no Grupo Escoteiro Inhandui",
+    "descricao": "Voluntários adultos conduzem atividades educativas ao ar livre e projetos de cidadania com crianças e jovens no Grupo Escoteiro Inhandui, em Canoas. Também há espaço para apoio administrativo e em eventos. Exige 21 anos ou mais.",
+    "organizacao": "Escoteiros do Brasil – Grupo Escoteiro Inhandui (141/RS)",
+    "area": "Esporte e lazer",
+    "regiao": "Canoas",
+    "local": "Rua Nazaré, 341 – Jardim Ideal, Canoas",
+    "diasSemana": [
+      6
+    ],
+    "horaInicio": "14:00",
+    "horaFim": "17:30",
+    "horarioEstimado": true,
+    "dataEspecifica": null,
+    "vagas": 3,
+    "link": "https://www.escoteirosrs.org.br/grupos",
+    "fonte": "escoteirosrs.org.br",
+    "latitude": -29.931919,
+    "longitude": -51.158538
+  },
+  {
+    "titulo": "Escotista voluntário no Grupo Escoteiro José Plácido de Castro (Humaitá)",
+    "descricao": "Os Escoteiros do Brasil buscam adultos a partir de 21 anos para conduzir atividades com crianças e jovens. No Grupo José Plácido de Castro, no Humaitá, o voluntário participa das reuniões semanais, acampamentos e projetos de serviço à comunidade, com formação oferecida pela instituição.",
+    "organizacao": "Escoteiros do Brasil – Grupo Escoteiro José Plácido de Castro (020/RS)",
+    "area": "Esporte e lazer",
+    "regiao": "Porto Alegre – Zona Norte",
+    "local": "Rua Dona Teodora, 1156 – Humaitá, Porto Alegre",
+    "diasSemana": [
+      6
+    ],
+    "horaInicio": "14:00",
+    "horaFim": "17:30",
+    "horarioEstimado": true,
+    "dataEspecifica": null,
+    "vagas": 3,
+    "link": "https://www.escoteirosrs.org.br/grupos",
+    "fonte": "escoteirosrs.org.br",
+    "latitude": -29.993408,
+    "longitude": -51.192734
+  },
+  {
+    "titulo": "Escotista voluntário no Grupo Escoteiro Leo Borges Fortes (Agronomia)",
+    "descricao": "Adultos voluntários ajudam a planejar e conduzir as atividades do grupo, que combinam jogos, vida ao ar livre e formação cidadã para crianças e jovens da Zona Leste. Idade mínima de 21 anos e participação na formação de escotistas.",
+    "organizacao": "Escoteiros do Brasil – Grupo Escoteiro Leo Borges Fortes (080/RS)",
+    "area": "Esporte e lazer",
+    "regiao": "Porto Alegre – Zona Leste",
+    "local": "Av. Bento Gonçalves, 7712 – Agronomia, Porto Alegre",
+    "diasSemana": [
+      6
+    ],
+    "horaInicio": "14:00",
+    "horaFim": "17:30",
+    "horarioEstimado": true,
+    "dataEspecifica": null,
+    "vagas": 3,
+    "link": "https://www.escoteirosrs.org.br/grupos",
+    "fonte": "escoteirosrs.org.br",
+    "latitude": -30.071331,
+    "longitude": -51.138986
+  },
+  {
+    "titulo": "Escotista voluntário no Grupo Escoteiro do Mar Passo da Pátria (Assunção)",
+    "descricao": "O grupo de escotismo do mar, à beira do Guaíba, recebe adultos voluntários para atividades náuticas, acampamentos e projetos ambientais com crianças e jovens. A participação exige 21 anos ou mais e a formação oferecida pelos Escoteiros do Brasil.",
+    "organizacao": "Escoteiros do Brasil – Grupo Escoteiro do Mar Passo da Pátria (090/RS)",
+    "area": "Esporte e lazer",
+    "regiao": "Porto Alegre – Zona Sul",
+    "local": "Av. Guaíba, 4327 – Vila Assunção, Porto Alegre",
+    "diasSemana": [
+      6
+    ],
+    "horaInicio": "14:00",
+    "horaFim": "17:30",
+    "horarioEstimado": true,
+    "dataEspecifica": null,
+    "vagas": 3,
+    "link": "https://www.escoteirosrs.org.br/grupos",
+    "fonte": "escoteirosrs.org.br",
+    "latitude": -30.103027,
+    "longitude": -51.266128
+  }
+]

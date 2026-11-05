@@ -243,6 +243,7 @@ export async function telaUsuarios(ctx) {
           <td class="text-end text-nowrap">
             <button type="button" class="btn btn-outline-primary btn-sm" data-editar="${u.id}" ${bloqueado ? raw('disabled') : ''}>Editar</button>
             <button type="button" class="btn btn-outline-secondary btn-sm" data-redefinir="${u.id}" ${bloqueado || proprio ? raw('disabled') : ''} title="${proprio ? 'Você não pode redefinir o próprio acesso aqui' : 'Gerar senha temporária'}">Redefinir acesso</button>
+            <button type="button" class="btn btn-outline-danger btn-sm" data-excluir="${u.id}" ${proprio ? raw('disabled') : ''} aria-label="Excluir ${u.nome}" title="${proprio ? 'Você não pode excluir a própria conta' : 'Excluir usuário'}"><i class="bi bi-trash" aria-hidden="true"></i></button>
           </td></tr>`;
       })}</tbody></table></div></div>`);
   }
@@ -252,7 +253,21 @@ export async function telaUsuarios(ctx) {
     const bRedef = ev.target.closest('[data-redefinir]');
     if (bEditar) editar(usuarios.find((u) => String(u.id) === bEditar.dataset.editar));
     if (bRedef) redefinir(bRedef, usuarios.find((u) => String(u.id) === bRedef.dataset.redefinir));
+    const bExc = ev.target.closest('[data-excluir]');
+    if (bExc) excluir(bExc, usuarios.find((u) => String(u.id) === bExc.dataset.excluir));
   });
+
+  async function excluir(botao, u) {
+    if (!(await confirmar({
+      titulo: 'Excluir usuário', ok: 'Excluir definitivamente', perigo: true,
+      mensagem: `${u.nome} (${u.email}) será apagado(a) com inscrições, histórico, certificados e avisos. As demandas que essa pessoa cadastrou passam para você. Esta ação não pode ser desfeita.`,
+    }))) return;
+    await executar(botao, async () => {
+      await api.del(`/admin/usuarios/${u.id}`);
+      toast('Usuário excluído.', 'warning');
+      await carregar();
+    });
+  }
 
   function editar(u) {
     const proprio = u.id === state.usuario.id;
@@ -364,7 +379,8 @@ function cartaoCatalogo(ctx, tipo, titulo, singular) {
       <span class="${i.ativo ? '' : 'text-muted text-decoration-line-through'}">${i.nome} ${i.ativo ? '' : badge('inativo')}</span>
       <span class="text-nowrap">
         <button type="button" class="btn btn-outline-primary btn-sm" data-editar="${i.id}">Renomear</button>
-        <button type="button" class="btn btn-sm ${i.ativo ? 'btn-outline-danger' : 'btn-outline-success'}" data-alternar="${i.id}">${i.ativo ? 'Inativar' : 'Reativar'}</button>
+        <button type="button" class="btn btn-sm ${i.ativo ? 'btn-outline-warning' : 'btn-outline-success'}" data-alternar="${i.id}">${i.ativo ? 'Inativar' : 'Reativar'}</button>
+        <button type="button" class="btn btn-outline-danger btn-sm" data-excluir="${i.id}" aria-label="Excluir ${i.nome}" title="Excluir"><i class="bi bi-trash" aria-hidden="true"></i></button>
       </span></li>`)}</ul>` : vazio(`Nenhuma ${singular} cadastrada.`, 'bi-list-ul'));
   }
 
@@ -380,6 +396,21 @@ function cartaoCatalogo(ctx, tipo, titulo, singular) {
   lista.addEventListener('click', async (ev) => {
     const bEd = ev.target.closest('[data-editar]');
     const bAlt = ev.target.closest('[data-alternar]');
+    const bExc = ev.target.closest('[data-excluir]');
+    if (bExc) {
+      const item = itens.find((i) => String(i.id) === bExc.dataset.excluir);
+      if (!(await confirmar({
+        titulo: `Excluir ${singular}`, ok: 'Excluir', perigo: true,
+        mensagem: `"${item.nome}" será apagada e removida do perfil dos voluntários. Se houver demandas usando este item, a exclusão será recusada.`,
+      }))) return;
+      await executar(bExc, async () => {
+        await api.del(`${caminho}/${item.id}`);
+        toast('Excluída.', 'warning');
+        state.catalogos = null;
+        await carregar();
+      });
+      return;
+    }
     if (bEd) {
       const item = itens.find((i) => String(i.id) === bEd.dataset.editar);
       modalFormulario({
