@@ -588,6 +588,9 @@ fieldset legend { font-weight: 800; font-size: 1rem; }
 .seletor-opcao.ativa { background: var(--linha-hover); }
 .seletor-opcao i { opacity: 0; color: var(--laranja-escuro); font-size: 1.05rem; }
 .seletor-opcao[aria-selected="true"] i { opacity: 1; }
+.seletor-opcao.neutra[aria-selected="true"] { color: var(--texto-suave); background: transparent; }
+.seletor-opcao.neutra[aria-selected="true"].ativa { background: var(--linha-hover); }
+.seletor-opcao.neutra i { display: none; }
 .seletor-opcao[aria-disabled="true"] { opacity: .45; cursor: not-allowed; }
 .seletor-lista::-webkit-scrollbar { width: 10px; }
 .seletor-lista::-webkit-scrollbar-thumb { background: var(--borda-forte); border-radius: 10px; border: 3px solid var(--superficie); }
