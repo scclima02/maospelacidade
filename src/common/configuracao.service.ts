@@ -28,7 +28,7 @@ export class ConfiguracaoService {
       pesoBase: Number(v.peso_base ?? 50),
       pesoRegiao: Number(v.peso_regiao ?? 50),
       retencaoMeses: Number(v.retencao_meses ?? 24),
-      nomeOrganizacao: v.nome_organizacao ?? 'Prefeitura Municipal',
+      nomeOrganizacao: v.nome_organizacao ?? 'Rede Mãos pela Cidade',
       termoVersao: v.termo_versao ?? '1.0',
     };
   }

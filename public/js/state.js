@@ -3,7 +3,7 @@ import { api } from './api.js';
 export const state = {
   usuario: null,
   config: {
-    nomeOrganizacao: 'Prefeitura Municipal',
+    nomeOrganizacao: 'Rede Mãos pela Cidade',
     termoVersao: '',
     termo: null,
   },

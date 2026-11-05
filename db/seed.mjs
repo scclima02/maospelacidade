@@ -25,7 +25,7 @@ if (!process.env.DATABASE_URL) {
   process.exit(1);
 }
 
-const ADMIN_EMAIL = (process.env.ADMIN_EMAIL ?? 'admin@prefeitura.gov.br').toLowerCase();
+const ADMIN_EMAIL = (process.env.ADMIN_EMAIL ?? 'admin@maospelacidade.org').toLowerCase();
 const ADMIN_SENHA = process.env.ADMIN_SENHA ?? 'Admin@123';
 
 const client = new pg.Client({ connectionString: process.env.DATABASE_URL });
@@ -51,9 +51,9 @@ try {
   console.log(admin.novo ? `Administrador criado: ${ADMIN_EMAIL}` : `Administrador já existe: ${ADMIN_EMAIL}`);
 
   if (process.env.SEED_DEMO === '1') {
-    const gestor = await usuario({ nome: 'Carla Gestora', email: 'gestor@prefeitura.gov.br', senha: 'Gestor@123', telefone: '(11) 3000-0000', perfil: 'gestor' });
+    const gestor = await usuario({ nome: 'Carla Gestora', email: 'gestor@maospelacidade.org', senha: 'Gestor@123', telefone: '(11) 3000-0000', perfil: 'gestor' });
     await client.query(
-      `INSERT INTO gestor (id_usuario, organizacao, cargo) VALUES ($1, 'Secretaria de Desenvolvimento Social', 'Coordenadora de Ações Comunitárias')
+      `INSERT INTO gestor (id_usuario, organizacao, cargo) VALUES ($1, 'Rede Mãos pela Cidade', 'Coordenadora de Ações Comunitárias')
        ON CONFLICT (id_usuario) DO NOTHING`,
       [gestor.id],
     );
@@ -119,7 +119,7 @@ try {
       const fim = new Date(dia.getTime() + 2 * 3_600_000);
       const d = await client.query(
         `INSERT INTO demanda (id_gestor, id_area, id_regiao, titulo, descricao, local_acao, data_inicio, data_fim, vagas, situacao)
-         VALUES ($1,$2,$3,'Oficina de reforço escolar','Apoio em leitura e matemática para crianças do ensino fundamental.','Escola Municipal Centro',$4,$5,3,'aberta')
+         VALUES ($1,$2,$3,'Oficina de reforço escolar','Apoio em leitura e matemática para crianças do ensino fundamental.','Escola do Centro',$4,$5,3,'aberta')
          RETURNING id_demanda`,
         [gestor.id, educacao, centro, dia, fim],
       );

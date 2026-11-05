@@ -135,7 +135,7 @@ INSERT INTO configuracao (chave, valor) VALUES
   ('peso_base', '50'),
   ('peso_regiao', '50'),
   ('retencao_meses', '24'),
-  ('nome_organizacao', 'Prefeitura Municipal'),
+  ('nome_organizacao', 'Rede Mãos pela Cidade'),
   ('termo_versao', '1.0')
 ON CONFLICT (chave) DO NOTHING;
 

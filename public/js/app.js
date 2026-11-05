@@ -22,7 +22,7 @@ const A = ['administrador'];
 const GA = ['gestor', 'administrador'];
 
 definirRotas([
-  { caminho: '/', publica: true, soDeslogado: true, tela: telaLanding, titulo: 'Mãos pela Cidade — Voluntariado municipal' },
+  { caminho: '/', publica: true, soDeslogado: true, tela: telaLanding, titulo: 'Mãos pela Cidade — Voluntariado comunitário' },
   { caminho: '/login', publica: true, soDeslogado: true, tela: telaLogin },
   { caminho: '/cadastro', publica: true, soDeslogado: true, tela: telaCadastro },
   { caminho: '/recuperar-senha', publica: true, soDeslogado: true, tela: telaRecuperarSenha },

@@ -1,9 +1,9 @@
 # 00 — Visão geral e stack
 
 ## Objetivo
-**Mãos pela Cidade** (nome do produto; "Sistema de Gestão de Voluntariado Municipal" no projeto acadêmico).
-O nome da prefeitura/organização continua configurável (`nome_organizacao`) e aparece como assinatura
-em todas as telas (RNF12). Aplicação web para mobilizar voluntários em demandas pontuais de uma prefeitura: o cidadão
+**Mãos pela Cidade** (plataforma de voluntariado comunitário).
+O nome da organização responsável é configurável (`nome_organizacao`) e aparece como assinatura
+em todas as telas (RNF12). Aplicação web para mobilizar voluntários em demandas pontuais de uma organização comunitária: o cidadão
 se cadastra com área de interesse, disponibilidade e região; o gestor cadastra demandas; o
 sistema cruza perfis e demandas, notifica os compatíveis e mantém histórico de horas,
 certificados, indicadores e relatórios.

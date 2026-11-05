@@ -43,4 +43,4 @@ Fonte: PDF "Levantamento de Requisitos". Cada item recebe um identificador está
 | RNF09 | Chrome e Firefox atuais | JS moderno sem dependências proprietárias |
 | RNF10 | Escalabilidade | Índices nas chaves de cruzamento; serverless |
 | RNF11 | Código em camadas | Controller → Service → acesso a dados |
-| RNF12 | Nome/logotipo da prefeitura em todas as telas | Cabeçalho/rodapé fixos; nome vindo de `configuracao` |
+| RNF12 | Nome/logotipo da organização em todas as telas | Cabeçalho/rodapé fixos; nome vindo de `configuracao` |

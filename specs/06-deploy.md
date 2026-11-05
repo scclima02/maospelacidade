@@ -8,7 +8,7 @@
 | `APP_URL` | sim em produção | URL pública (links dos e-mails), ex. `https://svgmunicipal.vercel.app` |
 | `SMTP_HOST`, `SMTP_PORT`, `SMTP_USER`, `SMTP_PASS`, `SMTP_FROM` | não | E-mail real. Sem SMTP, os e-mails são registrados como `ignorado` |
 | `CRON_SECRET` | não | Protege `/api/cron/retencao` (a Vercel envia no header Authorization) |
-| `ADMIN_EMAIL`, `ADMIN_SENHA` | não | Administrador criado pelo `db:seed` (padrão `admin@prefeitura.gov.br` / `Admin@123`). **Defina uma senha própria em produção** |
+| `ADMIN_EMAIL`, `ADMIN_SENHA` | não | Administrador criado pelo `db:seed` (padrão `admin@maospelacidade.org` / `Admin@123`). **Defina uma senha própria em produção** |
 | `SEED_DEMO` | não | `1` para carregar também gestor, voluntários e demandas de demonstração no `db:seed` |
 
 ## Local
@@ -37,8 +37,8 @@ npm test                 # testes unitários + fluxo completo (Postgres embutido
 ## Contas de demonstração (somente com `SEED_DEMO=1`; o administrador usa `ADMIN_SENHA` quando definida)
 | Perfil | E-mail | Senha |
 |---|---|---|
-| administrador | `admin@prefeitura.gov.br` | `Admin@123` |
-| gestor | `gestor@prefeitura.gov.br` | `Gestor@123` |
+| administrador | `admin@maospelacidade.org` | `Admin@123` |
+| gestor | `gestor@maospelacidade.org` | `Gestor@123` |
 | voluntário | `maria@exemplo.com` | `Voluntario@123` |
 | voluntário | `joao@exemplo.com` | `Voluntario@123` |
 

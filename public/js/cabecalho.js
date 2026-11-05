@@ -4,7 +4,7 @@ import { html, mount, PERFIS } from './ui.js';
 import { navegar } from './router.js';
 
 export const NOME_PRODUTO = 'Mãos pela Cidade';
-export const TAGLINE = 'Voluntariado municipal';
+export const TAGLINE = 'Voluntariado comunitário';
 
 // [link, rótulo, ícone, rótulo curto (dock), extra]
 const MENUS = {

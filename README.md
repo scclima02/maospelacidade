@@ -1,9 +1,9 @@
 # Mãos pela Cidade
 
-*Sistema de Gestão de Voluntariado Municipal.*
+*Plataforma de voluntariado comunitário.*
 
 Projeto Tecnológico em Desenvolvimento de Sistemas (ULBRA EAD): aplicação web para mobilizar
-voluntários em ações pontuais de uma prefeitura. O cidadão se cadastra com áreas de interesse,
+voluntários em ações pontuais de uma organização comunitária. O cidadão se cadastra com áreas de interesse,
 disponibilidade e região; o gestor cadastra demandas; o sistema cruza perfis e demandas, notifica os
 compatíveis e mantém histórico de horas, certificados, indicadores e relatórios.
 
@@ -46,8 +46,8 @@ No PowerShell use `$env:SEED_DEMO=1; npm run db:seed`.
 
 | Perfil | E-mail | Senha |
 |---|---|---|
-| Administrador | `admin@prefeitura.gov.br` | definida em `ADMIN_SENHA` no seed (a do site publicado não está neste repositório) |
-| Gestor | `gestor@prefeitura.gov.br` | `Gestor@123` |
+| Administrador | `admin@maospelacidade.org` | definida em `ADMIN_SENHA` no seed (a do site publicado não está neste repositório) |
+| Gestor | `gestor@maospelacidade.org` | `Gestor@123` |
 | Voluntário | `maria@exemplo.com` | `Voluntario@123` |
 | Voluntário | `joao@exemplo.com` | `Voluntario@123` |
 

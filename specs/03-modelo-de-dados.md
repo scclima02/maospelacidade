@@ -33,7 +33,7 @@ Base: Diagrama ER do projeto (Figura 2). Script executável: `db/schema.sql`.
 | `peso_base` | 50 | Pontuação inicial de todo compatível |
 | `peso_regiao` | 50 | Acréscimo se a região do voluntário = região da demanda |
 | `retencao_meses` | 24 | Prazo de inatividade para anonimização automática |
-| `nome_organizacao` | Prefeitura Municipal | Identidade institucional (RNF12) |
+| `nome_organizacao` | Rede Mãos pela Cidade | Identidade institucional (RNF12) |
 | `termo_versao` | 1.0 | Versão vigente do termo de uso/privacidade (UC04) |
 
 ## Índices

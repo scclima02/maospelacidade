@@ -1,7 +1,7 @@
 {
   "name": "svgmunicipal",
   "version": "1.0.0",
-  "description": "Sistema de Gestão de Voluntariado Municipal",
+  "description": "Mãos pela Cidade: plataforma de voluntariado comunitário",
   "private": true,
   "engines": {
     "node": ">=20"

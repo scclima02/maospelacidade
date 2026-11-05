@@ -97,7 +97,7 @@ describe('Fluxo completo do sistema', () => {
   });
 
   it('UC19: administrador cadastra gestor; e-mail duplicado dá 409', async () => {
-    const corpo = { nome: 'Gestora Teste', email: 'gestor@teste.com', senha: 'Gestor1234', perfil: 'gestor', organizacao: 'Secretaria X' };
+    const corpo = { nome: 'Gestora Teste', email: 'gestor@teste.com', senha: 'Gestor1234', perfil: 'gestor', organizacao: 'ONG X' };
     await admin.post('/api/admin/usuarios').send(corpo).expect(201);
     await admin.post('/api/admin/usuarios').send(corpo).expect(409);
     await admin.post('/api/admin/usuarios').send({ ...corpo, email: 'x@teste.com', senha: '123' }).expect(400);
@@ -263,8 +263,8 @@ describe('Fluxo completo do sistema', () => {
     await admin.put(`/api/admin/regioes/${novaRegiao.id}`).send({ ativo: false }).expect(200);
     expect((await http().get('/api/catalogos/regioes').expect(200)).body.some((r: any) => r.id === novaRegiao.id)).toBe(false);
 
-    const cfg = (await admin.put('/api/admin/config').send({ pesoRegiao: 30, nomeOrganizacao: 'Prefeitura de Teste' }).expect(200)).body;
-    expect(cfg).toMatchObject({ pesoBase: 50, pesoRegiao: 30, nomeOrganizacao: 'Prefeitura de Teste' });
+    const cfg = (await admin.put('/api/admin/config').send({ pesoRegiao: 30, nomeOrganizacao: 'ONG de Teste' }).expect(200)).body;
+    expect(cfg).toMatchObject({ pesoBase: 50, pesoRegiao: 30, nomeOrganizacao: 'ONG de Teste' });
     await admin.put('/api/admin/config').send({ pesoBase: -1 }).expect(400);
   });
 

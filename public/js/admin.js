@@ -185,7 +185,7 @@ function camposUsuario(u = {}, criar = false) {
           <option value="inativo" ${u.situacao === 'inativo' ? raw('selected') : ''}>Inativo</option>
           ${u.situacao === 'excluido' ? html`<option value="excluido" selected>Excluído</option>` : ''}
         </select></div>`}
-      <div class="col-12 col-md-6" data-gestor><label class="form-label" for="u-org">Organização / secretaria</label>
+      <div class="col-12 col-md-6" data-gestor><label class="form-label" for="u-org">Organização</label>
         <input class="form-control" id="u-org" name="organizacao" maxlength="120" value="${u.organizacao || ''}"></div>
       <div class="col-12 col-md-6" data-gestor><label class="form-label" for="u-cargo">Cargo</label>
         <input class="form-control" id="u-cargo" name="cargo" maxlength="120" value="${u.cargo || ''}"></div>
