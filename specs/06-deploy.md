@@ -5,7 +5,7 @@
 |---|---|---|
 | `DATABASE_URL` | sim | String de conexão do Neon (use a **pooled**, com `sslmode=require`) |
 | `JWT_SECRET` | sim | Segredo longo e aleatório para assinar a sessão |
-| `APP_URL` | sim em produção | URL pública (links dos e-mails), ex. `https://svgmunicipal.vercel.app` |
+| `APP_URL` | sim em produção | URL pública (links dos e-mails), ex. `https://svgmunicipal-samuels-projects-dc7a8ec0.vercel.app` |
 | `SMTP_HOST`, `SMTP_PORT`, `SMTP_USER`, `SMTP_PASS`, `SMTP_FROM` | não | E-mail real. Sem SMTP, os e-mails são registrados como `ignorado` |
 | `CRON_SECRET` | não | Protege `/api/cron/retencao` (a Vercel envia no header Authorization) |
 | `ADMIN_EMAIL`, `ADMIN_SENHA` | não | Administrador criado pelo `db:seed` (padrão `admin@maospelacidade.org` / `Admin@123`). **Defina uma senha própria em produção** |

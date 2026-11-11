@@ -33,7 +33,7 @@ export class GeocodificacaoService {
       try {
         const url = `https://nominatim.openstreetmap.org/search?format=json&limit=1&countrycodes=br&q=${encodeURIComponent(q)}`;
         const r = await fetch(url, {
-          headers: { 'User-Agent': 'MaosPelaCidade/1.0 (+https://svgmunicipal.vercel.app)', 'Accept-Language': 'pt-BR' },
+          headers: { 'User-Agent': 'MaosPelaCidade/1.0 (+https://svgmunicipal-samuels-projects-dc7a8ec0.vercel.app)', 'Accept-Language': 'pt-BR' },
           signal: AbortSignal.timeout(5000),
         });
         if (!r.ok) continue;

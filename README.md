@@ -14,7 +14,7 @@ frontend estático (HTML5, Bootstrap 5, Chart.js, JavaScript) · pdf-lib · Node
 
 ## Acesso público
 
-Sistema publicado em **https://svgmunicipal.vercel.app** (Vercel + banco no Neon). Veja as contas de teste abaixo.
+Sistema publicado em **https://svgmunicipal-samuels-projects-dc7a8ec0.vercel.app** (Vercel + banco no Neon). Veja as contas de teste abaixo.
 
 ## Desenvolvimento orientado a especificação
 
