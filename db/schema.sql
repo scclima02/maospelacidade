@@ -100,13 +100,25 @@ CREATE TABLE IF NOT EXISTS participacao (
   id_demanda        INTEGER NOT NULL REFERENCES demanda(id_demanda) ON DELETE CASCADE,
   id_voluntario     INTEGER NOT NULL REFERENCES voluntario(id_usuario) ON DELETE CASCADE,
   situacao          VARCHAR(12) NOT NULL DEFAULT 'sugerida'
-    CHECK (situacao IN ('sugerida','confirmada','recusada','selecionada','compareceu','faltou','cancelada')),
+    CHECK (situacao IN ('sugerida','confirmada','recusada','selecionada','compareceu','faltou','cancelada','nao_aprovada')),
   pontuacao         NUMERIC(8,2) NOT NULL DEFAULT 0,
   horas_realizadas  NUMERIC(6,2),
   data_registro     TIMESTAMPTZ,
   data_atualizacao  TIMESTAMPTZ NOT NULL DEFAULT now(),
   UNIQUE (id_demanda, id_voluntario)
 );
+
+-- Bancos antigos: o gestor passou a poder não aprovar uma inscrição ('nao_aprovada')
+DO $$
+BEGIN
+  IF NOT EXISTS (SELECT 1 FROM pg_constraint
+                 WHERE conname = 'participacao_situacao_check'
+                   AND pg_get_constraintdef(oid) LIKE '%nao_aprovada%') THEN
+    ALTER TABLE participacao DROP CONSTRAINT IF EXISTS participacao_situacao_check;
+    ALTER TABLE participacao ADD CONSTRAINT participacao_situacao_check
+      CHECK (situacao IN ('sugerida','confirmada','recusada','selecionada','compareceu','faltou','cancelada','nao_aprovada'));
+  END IF;
+END $$;
 
 CREATE TABLE IF NOT EXISTS notificacao (
   id_notificacao SERIAL PRIMARY KEY,

@@ -20,6 +20,7 @@ import {
 const V = ['voluntario'];
 const A = ['administrador'];
 const GA = ['gestor', 'administrador'];
+const TODOS = ['voluntario', 'gestor', 'administrador'];
 
 definirRotas([
   { caminho: '/', publica: true, soDeslogado: true, tela: telaLanding, titulo: 'Mãos pela Cidade — Voluntariado comunitário' },
@@ -29,11 +30,11 @@ definirRotas([
   { caminho: '/redefinir-senha', publica: true, tela: telaRedefinirSenha },
   { caminho: '/validar', publica: true, tela: telaValidarCertificado },
 
-  { caminho: '/oportunidades', perfis: V, tela: telaOportunidades },
-  { caminho: '/oportunidades/demanda/:idDemanda', perfis: V, tela: telaOportunidadeDetalhe },
-  { caminho: '/oportunidades/:id', perfis: V, tela: telaOportunidadeDetalhe },
+  { caminho: '/oportunidades', perfis: TODOS, tela: telaOportunidades },
+  { caminho: '/oportunidades/demanda/:idDemanda', perfis: TODOS, tela: telaOportunidadeDetalhe },
+  { caminho: '/oportunidades/:id', perfis: TODOS, tela: telaOportunidadeDetalhe },
   { caminho: '/notificacoes', perfis: V, tela: telaNotificacoes },
-  { caminho: '/historico', perfis: V, tela: telaHistorico },
+  { caminho: '/historico', perfis: TODOS, tela: telaHistorico },
   { caminho: '/perfil', perfis: V, tela: telaPerfil },
 
   { caminho: '/demandas', perfis: GA, tela: telaDemandas },

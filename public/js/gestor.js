@@ -2,7 +2,7 @@ import { api, qs } from './api.js';
 import { state, carregarCatalogos } from './state.js';
 import { navegar } from './router.js';
 import {
-  html, raw, mount, spinner, vazio, alerta, cabecalhoPagina, badge, toast, confirmar, abrirModal,
+  html, raw, mount, spinner, vazio, alerta, cabecalhoPagina, badge, toast, confirmar, abrirModal, modalFormulario,
   aoEnviar, ErroForm, executar, lerForm, mensagensDe, fmtPeriodo, fmtDataHora, fmtData, fmtHoras, fmtTaxa,
   paraInputLocal,
 } from './ui.js';
@@ -199,6 +199,16 @@ async function abrirResumo(idVoluntario) {
 }
 
 const OCUPAM_VAGA = ['selecionada', 'compareceu', 'faltou'];
+const PODE_NAO_APROVAR = ['sugerida', 'confirmada', 'selecionada'];
+
+// Comparecimento abaixo de 50% (com histórico) ganha alerta visual para apoiar a decisão do gestor.
+function celulaTaxa(t) {
+  if (t === null || t === undefined) return html`<span class="text-muted" title="Ainda sem presenças registradas">—</span>`;
+  const pct = Number(t) > 1 ? Number(t) : Number(t) * 100;
+  return pct < 50
+    ? html`<span class="taxa-baixa" title="Falta mais do que comparece"><i class="bi bi-exclamation-triangle-fill" aria-hidden="true"></i> ${fmtTaxa(t)}</span>`
+    : fmtTaxa(t);
+}
 
 export async function telaDemandaDetalhe(ctx) {
   const id = ctx.params.id;
@@ -264,13 +274,15 @@ export async function telaDemandaDetalhe(ctx) {
               <td>${v.regiao || '—'} ${v.mesmaRegiao ? html`<span class="badge text-bg-success">Mesma região</span>` : ''}</td>
               <td>${badge(v.situacao)}${OCUPAM_VAGA.slice(1).includes(v.situacao) ? html`<div class="small text-muted">${fmtHoras(v.horasRealizadas)}</div>` : ''}</td>
               <td class="num">${v.pontuacao}</td>
-              <td class="num">${fmtTaxa(v.taxaComparecimento)}</td>
+              <td class="num">${celulaTaxa(v.taxaComparecimento)}</td>
               <td class="small">${v.email || v.telefone
                 ? html`${v.email ? html`<a href="mailto:${v.email}">${v.email}</a>` : ''}${v.telefone ? html`<div>${v.telefone}</div>` : ''}`
                 : html`<span class="text-muted">Visível após a confirmação</span>`}</td>
               <td class="text-end text-nowrap">
                 <button type="button" class="btn btn-outline-secondary btn-sm" data-resumo="${v.idVoluntario}">Histórico</button>
-                ${podeAgir && v.situacao === 'selecionada' ? html`<button type="button" class="btn btn-outline-danger btn-sm" data-desel="${v.idParticipacao}">Desselecionar</button>` : ''}
+                ${podeAgir && v.situacao === 'selecionada' ? html`<button type="button" class="btn btn-outline-secondary btn-sm" data-desel="${v.idParticipacao}">Desselecionar</button>` : ''}
+                ${podeAgir && PODE_NAO_APROVAR.includes(v.situacao) ? html`<button type="button" class="btn btn-outline-danger btn-sm" data-naoaprovar="${v.idParticipacao}" data-nome="${v.nome}"><i class="bi bi-x-circle" aria-hidden="true"></i> Não aprovar</button>` : ''}
+                ${podeAgir && v.situacao === 'nao_aprovada' ? html`<button type="button" class="btn btn-outline-primary btn-sm" data-reconsiderar="${v.idParticipacao}"><i class="bi bi-arrow-counterclockwise" aria-hidden="true"></i> Reconsiderar</button>` : ''}
               </td>
             </tr>`)}</tbody>
           </table></div></div>`
@@ -375,6 +387,44 @@ export async function telaDemandaDetalhe(ctx) {
         await desenhar();
       });
     }));
+
+    // Não aprovar inscrição (vagas esgotadas, histórico de faltas...) e desfazer
+    ctx.el.querySelectorAll('[data-naoaprovar]').forEach((b) => b.addEventListener('click', () => {
+      const idParticipacao = Number(b.dataset.naoaprovar);
+      const vol = vols.find((v) => v.idParticipacao === idParticipacao);
+      const taxaBaixa = vol && vol.taxaComparecimento !== null && vol.taxaComparecimento !== undefined
+        && (Number(vol.taxaComparecimento) > 1 ? Number(vol.taxaComparecimento) : Number(vol.taxaComparecimento) * 100) < 50;
+      const sugerido = livres <= 0 ? 'vagas' : (taxaBaixa ? 'perfil' : '');
+      const opcao = (valor, titulo, dica) => html`<label class="opcao-motivo">
+        <input class="form-check-input" type="radio" name="motivo" value="${valor}" required ${sugerido === valor ? raw('checked') : ''}>
+        <span><strong>${titulo}</strong><small>${dica}</small></span></label>`;
+      modalFormulario({
+        titulo: `Não aprovar ${b.dataset.nome}`,
+        ok: 'Não aprovar',
+        perigo: true,
+        corpo: html`<p class="mb-3">A inscrição sai da lista de candidatos${vol?.situacao === 'selecionada' ? ' e a vaga é liberada' : ''}. O voluntário recebe um aviso; você pode reconsiderar depois.</p>
+          <fieldset class="d-grid gap-2 mb-3"><legend class="form-label">Motivo</legend>
+            ${opcao('vagas', 'Limite de vagas', 'As vagas já foram preenchidas por outros voluntários.')}
+            ${opcao('perfil', 'Histórico de participação', `Ex.: muitas faltas em ações anteriores${vol && vol.taxaComparecimento !== null && vol.taxaComparecimento !== undefined ? ` (comparecimento: ${fmtTaxa(vol.taxaComparecimento)})` : ''}. O voluntário não vê este detalhe.`)}
+            ${opcao('outro', 'Outro motivo', 'Explique na mensagem abaixo, se quiser.')}
+          </fieldset>
+          <label class="form-label" for="msg-nao-aprovar">Mensagem ao voluntário <span class="text-muted">(opcional)</span></label>
+          <textarea class="form-control" id="msg-nao-aprovar" name="mensagem" rows="3" maxlength="500" placeholder="Ex.: Obrigado! Na próxima ação contamos com você."></textarea>`,
+        aoSalvar: async (f) => {
+          const motivo = f.querySelector('input[name=motivo]:checked')?.value;
+          if (!motivo) throw new ErroForm('Escolha o motivo.');
+          await api.post(`/demandas/${d.id}/nao-aprovar`, { idParticipacao, motivo, mensagem: f.elements.mensagem.value.trim() || undefined });
+          toast('Inscrição não aprovada. O voluntário foi avisado.', 'warning');
+          await desenhar();
+        },
+      });
+    }));
+
+    ctx.el.querySelectorAll('[data-reconsiderar]').forEach((b) => b.addEventListener('click', () => executar(b, async () => {
+      await api.post(`/demandas/${d.id}/reconsiderar`, { idParticipacao: Number(b.dataset.reconsiderar) });
+      toast('Inscrição reconsiderada: voltou para "confirmada".');
+      await desenhar();
+    })));
 
     // Presença (UC18)
     const formPres = ctx.el.querySelector('#form-presenca');

@@ -48,13 +48,18 @@ const cartaoOportunidade = (o) => html`<div class="col-12 col-md-6 col-xl-4">
 </div>`;
 
 export async function telaOportunidades(ctx) {
-  const [{ areas, regioes }, eu] = await Promise.all([carregarCatalogos(), api.get('/voluntarios/me')]);
+  // Gestor e administrador também se inscrevem, mas não têm perfil de interesses: para eles não há "Para você".
+  const ehVoluntario = state.usuario?.perfil === 'voluntario';
+  const [{ areas, regioes }, eu] = await Promise.all([carregarCatalogos(), ehVoluntario ? api.get('/voluntarios/me') : {}]);
   const minhasAreas = areas.filter((a) => (eu.areas || []).includes(a.id)).map((a) => a.nome);
-  let aba = ABAS.some(([k]) => k === ctx.query?.aba) ? ctx.query.aba : 'recomendadas';
+  const abas = ehVoluntario ? ABAS : ABAS.filter(([k]) => k !== 'recomendadas');
+  let aba = abas.some(([k]) => k === ctx.query?.aba) ? ctx.query.aba : abas[0][0];
 
-  mount(ctx.el, html`${cabecalhoPagina('Oportunidades')}
+  mount(ctx.el, html`${ehVoluntario ? cabecalhoPagina('Oportunidades') : cabecalhoPagina('Oportunidades',
+    html`<a class="btn btn-outline-secondary" href="#/historico"><i class="bi bi-clock-history" aria-hidden="true"></i> Minhas participações</a>`,
+    'Você também pode participar das ações como voluntário.')}
     <ul class="nav nav-pills abas-vagas mb-3" role="tablist" aria-label="Visões das oportunidades">
-      ${ABAS.map(([k, rotulo, icone]) => html`<li class="nav-item" role="presentation">
+      ${abas.map(([k, rotulo, icone]) => html`<li class="nav-item" role="presentation">
         <button type="button" class="nav-link" role="tab" data-aba="${k}"><i class="bi ${icone}" aria-hidden="true"></i> ${rotulo}</button></li>`)}
     </ul>
     <form class="card card-body shadow-sm mb-3" id="filtros" novalidate aria-label="Filtros de oportunidades">
@@ -102,7 +107,7 @@ export async function telaOportunidades(ctx) {
     const filtros = lerForm(form);
     try {
       if (aba === 'mapa') {
-        dica.textContent = 'Clique em um marcador para ver a ação e traçar a rota da sua localização até o local. Em vermelho: suas áreas de interesse.';
+        dica.textContent = `Clique em um marcador para ver a ação e traçar a rota da sua localização até o local.${ehVoluntario ? ' Em vermelho: suas áreas de interesse.' : ''}`;
         const itens = await api.get(`/oportunidades/explorar${qs({ ...filtros, escopo: 'todas' })}`);
         limparMapa = await montarMapa(lista, itens);
         return;
@@ -120,7 +125,9 @@ export async function telaOportunidades(ctx) {
         ? (minhasAreas.length
           ? `Ações das suas áreas de interesse (${minhasAreas.join(', ')}). As da sua região (${eu.regiao || 'não informada'}) aparecem primeiro.`
           : 'Você ainda não escolheu áreas de interesse. Atualize em "Meu perfil".')
-        : 'Todas as ações abertas. As das suas áreas e da sua região aparecem primeiro.';
+        : (ehVoluntario
+          ? 'Todas as ações abertas. As das suas áreas e da sua região aparecem primeiro.'
+          : 'Todas as ações abertas. Abra uma delas e clique em "Quero participar" para se inscrever como voluntário.');
       const itens = await api.get(`/oportunidades/explorar${qs({ ...filtros, escopo: aba })}`);
       if (itens.length) {
         mount(lista, html`<p class="small mb-2"><strong>${itens.length}</strong> ${itens.length === 1 ? 'oportunidade encontrada' : 'oportunidades encontradas'}</p>
@@ -176,6 +183,7 @@ export async function telaOportunidadeDetalhe(ctx) {
       cancelada: alerta('secondary', 'Sua participação foi cancelada.'),
       compareceu: alerta('success', 'Presença registrada. Seu certificado está disponível no histórico.'),
       faltou: alerta('warning', 'Falta registrada nesta ação.'),
+      nao_aprovada: alerta('secondary', 'Sua inscrição nesta ação não foi aprovada pelo responsável. Obrigado pelo interesse! Veja outras oportunidades.'),
     }[o.situacao] || '';
 
     mount(ctx.el, html`<nav aria-label="Navegação"><a href="#/oportunidades" class="small"><i class="bi bi-arrow-left" aria-hidden="true"></i> Voltar às oportunidades</a></nav>

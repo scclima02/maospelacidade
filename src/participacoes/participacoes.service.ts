@@ -7,7 +7,7 @@ import { PdfService } from '../common/pdf.service';
 import { escaparLike } from '../common/sql';
 import { diaOpcional, inteiroOpcional } from '../common/validador';
 
-const SITUACOES_VISIVEIS = ['sugerida', 'confirmada', 'selecionada', 'recusada', 'cancelada'];
+const SITUACOES_VISIVEIS = ['sugerida', 'confirmada', 'selecionada', 'recusada', 'cancelada', 'nao_aprovada'];
 
 const BASE_OPORTUNIDADE = `
   SELECT p.id_participacao AS "idParticipacao", d.id_demanda AS "idDemanda", d.titulo, d.descricao,
@@ -57,7 +57,7 @@ export class ParticipacoesService {
     if (typeof q.situacao === 'string' && SITUACOES_VISIVEIS.includes(q.situacao)) {
       add('p.situacao = ?', q.situacao);
     } else {
-      filtros.push(`p.situacao IN ('sugerida','confirmada','selecionada')`);
+      filtros.push(`p.situacao IN ('sugerida','confirmada','selecionada','nao_aprovada')`);
     }
     return this.db.query(`${BASE_OPORTUNIDADE} WHERE ${filtros.join(' AND ')} ORDER BY d.data_inicio ASC LIMIT 300`, params);
   }
@@ -133,8 +133,11 @@ export class ParticipacoesService {
     return o;
   }
 
-  /** Inscrição espontânea: o voluntário confirma interesse em qualquer demanda aberta. */
-  async participar(idVoluntario: number, idDemanda: number) {
+  /**
+   * Inscrição espontânea: o voluntário confirma interesse em qualquer demanda aberta.
+   * Gestor ou administrador que se inscreve ganha o registro de voluntário na hora (sem áreas, então não entra no cruzamento automático).
+   */
+  async participar(idVoluntario: number, idDemanda: number, perfil: string = 'voluntario') {
     const cfg = await this.cfg.obter();
     const id = await this.db.tx(async (tx) => {
       const [d] = await tx.query(
@@ -147,7 +150,11 @@ export class ParticipacoesService {
       if (d.situacao !== 'aberta' || d.inicio <= new Date()) {
         throw new UnprocessableEntityException('Esta oportunidade não aceita mais inscrições.');
       }
-      const [c] = await tx.query(
+      const equipe = perfil !== 'voluntario';
+      if (equipe) {
+        await tx.query('INSERT INTO voluntario (id_usuario) VALUES ($1) ON CONFLICT (id_usuario) DO NOTHING', [idVoluntario]);
+      }
+      const [c] = equipe ? [true] : await tx.query(
         'SELECT 1 FROM consentimento WHERE id_usuario = $1 AND data_revogacao IS NULL LIMIT 1',
         [idVoluntario],
       );

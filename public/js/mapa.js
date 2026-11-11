@@ -62,7 +62,7 @@ async function calcularRota(origem, destino) {
 const fmtKm = (km) => `${km.toLocaleString('pt-BR', { maximumFractionDigits: km < 10 ? 1 : 0 })} km`;
 const fmtMin = (m) => (m < 60 ? `${Math.round(m)} min` : `${Math.floor(m / 60)} h ${Math.round(m % 60)} min`);
 
-const popup = (o) => html`<div class="popup-vaga">
+const popup = (o, unico) => html`<div class="popup-vaga">
   ${o.area ? html`<span class="popup-area ${o.mesmaArea ? 'sua' : ''}">${o.mesmaArea ? html`<i class="bi bi-heart-fill" aria-hidden="true"></i> ` : ''}${o.area}</span>` : ''}
   <strong class="popup-titulo">${o.titulo}</strong>
   ${o.organizacao ? html`<div class="popup-org">${o.organizacao}</div>` : ''}
@@ -70,7 +70,7 @@ const popup = (o) => html`<div class="popup-vaga">
   <div class="popup-info"><i class="bi bi-calendar-event" aria-hidden="true"></i><span>${fmtPeriodo(o.dataInicio, o.dataFim)}</span></div>
   <div class="d-flex flex-wrap gap-2 mt-3">
     <button type="button" class="btn btn-primary btn-sm" data-rota="${o.idDemanda}"><i class="bi bi-sign-turn-right" aria-hidden="true"></i> Traçar rota</button>
-    <a class="btn btn-outline-secondary btn-sm" href="#/oportunidades/demanda/${o.idDemanda}">Detalhes</a>
+    ${unico ? '' : html`<a class="btn btn-outline-secondary btn-sm" href="#/oportunidades/demanda/${o.idDemanda}">Detalhes</a>`}
   </div>
 </div>`;
 
@@ -82,9 +82,15 @@ export async function montarMapa(alvo, itens, { alturaClasse = 'mapa-vagas', uni
   const comLugar = itens.filter(temCoordenadas);
   const semLugar = itens.length - comLugar.length;
 
-  mount(alvo, html`<div class="mapa-caixa">
-      <div class="${alturaClasse}" data-mapa role="region" aria-label="Mapa das oportunidades"></div>
-      <div class="painel-rota card shadow-sm d-none" data-painel aria-live="polite"></div>
+  mount(alvo, html`<div class="mapa-caixa ${unico ? 'compacta' : ''}">
+      <div class="mapa-layout">
+        <div class="${alturaClasse}" data-mapa role="region" aria-label="Mapa das oportunidades"></div>
+        <div class="painel-rota card d-none" data-painel aria-live="polite"></div>
+      </div>
+      ${unico && comLugar.length ? html`<div class="rota-acoes" data-atalhos>
+        <button type="button" class="btn btn-primary btn-sm" data-rota="${comLugar[0].idDemanda}"><i class="bi bi-sign-turn-right" aria-hidden="true"></i> Traçar rota até aqui</button>
+        <a class="btn btn-outline-secondary btn-sm" href="${linkNavegacao(comLugar[0])}" target="_blank" rel="noopener noreferrer"><i class="bi bi-box-arrow-up-right" aria-hidden="true"></i> Abrir no Google Maps</a>
+      </div>` : ''}
     </div>
     ${!unico && semLugar ? html`<p class="small text-muted mt-2">${semLugar} ${semLugar === 1 ? 'ação não aparece' : 'ações não aparecem'} no mapa (online ou sem endereço localizado). Veja na aba "Todas as oportunidades".</p>` : ''}`);
 
@@ -98,6 +104,7 @@ export async function montarMapa(alvo, itens, { alturaClasse = 'mapa-vagas', uni
 
   const caixaMapa = alvo.querySelector('[data-mapa]');
   const painel = alvo.querySelector('[data-painel]');
+  const atalhos = alvo.querySelector('[data-atalhos]');
   const mapa = L.map(caixaMapa, { scrollWheelZoom: !unico }).setView(BRASIL.centro, BRASIL.zoom);
   // Mapa base da Esri (sem chave): ruas coloridas no tema claro; cinza-escuro com rótulos no escuro.
   const esri = (servico) => `https://server.arcgisonline.com/ArcGIS/rest/services/${servico}/MapServer/tile/{z}/{y}/{x}`;
@@ -123,23 +130,33 @@ export async function montarMapa(alvo, itens, { alturaClasse = 'mapa-vagas', uni
   const marcadores = comLugar.map((o) => {
     const m = L.marker([o.latitude, o.longitude], { icon: icone(o.mesmaArea ? '#ff5e62' : '#2f6fed'), title: o.titulo, alt: o.titulo });
     const conteudo = document.createElement('div');
-    mount(conteudo, popup(o));
-    m.bindPopup(conteudo, { maxWidth: 280 });
+    mount(conteudo, popup(o, unico));
+    m.bindPopup(conteudo, { maxWidth: Math.min(280, Math.max(200, caixaMapa.clientWidth - 64)), autoPanPadding: [16, 16] });
     return m.addTo(mapa);
   });
   if (marcadores.length) {
     const grupo = L.featureGroup(marcadores);
     if (marcadores.length === 1) mapa.setView(marcadores[0].getLatLng(), 15);
     else mapa.fitBounds(grupo.getBounds().pad(0.15));
-    if (unico) marcadores[0].openPopup();
   }
 
   let camadaRota = null;
   let eu = null;
 
+  // No celular o painel fica abaixo do mapa: rola até ele para o resultado não passar despercebido.
+  function mostrarPainel() {
+    const r = painel.getBoundingClientRect();
+    if (r.bottom > window.innerHeight - 96) painel.scrollIntoView({ behavior: 'smooth', block: 'center' });
+  }
+
+  // Com o painel ao lado o mapa muda de largura: o Leaflet precisa recalcular o tamanho.
+  const ajustarMapa = () => mapa.invalidateSize();
+
   async function tracar(o) {
     painel.classList.remove('d-none');
-    mount(painel, html`<div class="card-body py-2 small"><span class="spinner-border spinner-border-sm" aria-hidden="true"></span> Buscando sua localização e a melhor rota…</div>`);
+    if (atalhos) atalhos.classList.add('d-none');
+    ajustarMapa();
+    mount(painel, html`<div class="card-body small"><span class="spinner-border spinner-border-sm" aria-hidden="true"></span> Buscando sua localização e a melhor rota…</div>`);
     try {
       const origem = await minhaPosicao();
       const rota = await calcularRota(origem, o);
@@ -148,22 +165,27 @@ export async function montarMapa(alvo, itens, { alturaClasse = 'mapa-vagas', uni
       camadaRota = L.polyline(rota.pontos, { color: '#ff5e62', weight: 5, opacity: 0.85 }).addTo(mapa);
       eu = L.circleMarker([origem.lat, origem.lng], { radius: 8, color: '#fff', weight: 3, fillColor: '#2f6fed', fillOpacity: 1 })
         .bindTooltip('Você está aqui').addTo(mapa);
+      ajustarMapa();
       mapa.fitBounds(camadaRota.getBounds().pad(0.12));
-      mount(painel, html`<div class="card-body py-2">
-        <div class="d-flex flex-wrap align-items-center justify-content-between gap-2">
-          <div><div class="small text-muted">Rota de carro até</div><strong>${o.titulo}</strong>
-            <div class="fs-5 fw-bold">${fmtMin(rota.minutos)} <span class="fs-6 fw-normal text-muted">· ${fmtKm(rota.km)}</span></div></div>
-          <div class="d-flex flex-wrap gap-2">
-            <a class="btn btn-primary btn-sm" href="${linkNavegacao(o, origem)}" target="_blank" rel="noopener noreferrer"><i class="bi bi-cursor" aria-hidden="true"></i> Seguir no Google Maps</a>
-            <button type="button" class="btn btn-outline-secondary btn-sm" data-limpar>Limpar rota</button>
-          </div>
+      mount(painel, html`<div class="card-body">
+        <div class="rota-resumo">
+          <div class="rota-destino"><div class="small text-muted">Rota de carro até</div><strong>${o.titulo}</strong></div>
+          <div class="rota-tempo">${fmtMin(rota.minutos)} <span>· ${fmtKm(rota.km)}</span></div>
         </div>
-        <div class="small text-muted mt-1">No Google Maps você também pode escolher ir a pé ou de transporte público.</div>
+        <div class="rota-acoes">
+          <a class="btn btn-primary btn-sm" href="${linkNavegacao(o, origem)}" target="_blank" rel="noopener noreferrer"><i class="bi bi-cursor" aria-hidden="true"></i> Seguir no Google Maps</a>
+          <button type="button" class="btn btn-outline-secondary btn-sm" data-limpar><i class="bi bi-x-lg" aria-hidden="true"></i> Limpar rota</button>
+        </div>
+        <div class="small text-muted mt-2">No Google Maps você também pode escolher ir a pé ou de transporte público.</div>
       </div>`);
+      mostrarPainel();
     } catch (e) {
-      mount(painel, html`<div class="card-body py-2 small">${alerta('warning', e.message)}
-        <a class="btn btn-primary btn-sm" href="${linkNavegacao(o)}" target="_blank" rel="noopener noreferrer"><i class="bi bi-cursor" aria-hidden="true"></i> Abrir rota no Google Maps</a>
-        <button type="button" class="btn btn-outline-secondary btn-sm" data-limpar>Fechar</button></div>`);
+      mount(painel, html`<div class="card-body small">${alerta('warning', e.message)}
+        <div class="rota-acoes">
+          <a class="btn btn-primary btn-sm" href="${linkNavegacao(o)}" target="_blank" rel="noopener noreferrer"><i class="bi bi-cursor" aria-hidden="true"></i> Abrir rota no Google Maps</a>
+          <button type="button" class="btn btn-outline-secondary btn-sm" data-limpar>Fechar</button>
+        </div></div>`);
+      mostrarPainel();
     }
   }
 
@@ -176,6 +198,8 @@ export async function montarMapa(alvo, itens, { alturaClasse = 'mapa-vagas', uni
       camadaRota = null;
       eu = null;
       painel.classList.add('d-none');
+      if (atalhos) atalhos.classList.remove('d-none');
+      ajustarMapa();
     }
   });
 

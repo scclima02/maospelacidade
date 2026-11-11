@@ -101,6 +101,14 @@ export function prepararConteudo(raiz) {
     aoEntrar(el, () => animarNumero(el, n.alvo, n));
   });
 
+  // Rótulo de cada célula a partir do cabeçalho: no celular a tabela vira lista de cartões.
+  raiz.querySelectorAll('table.tabela-compacta').forEach((t) => {
+    const cab = [...t.querySelectorAll('thead th')].map((th) => (th.querySelector('.visually-hidden') ? '' : th.textContent.trim()));
+    t.querySelectorAll('tbody tr').forEach((tr) => [...tr.children].forEach((td, i) => {
+      if (cab[i] && !td.dataset.label) td.dataset.label = cab[i];
+    }));
+  });
+
   raiz.querySelectorAll('.table-responsive').forEach((el) => {
     if (!el.dataset.rol) {
       el.dataset.rol = '1';

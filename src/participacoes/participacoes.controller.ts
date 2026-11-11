@@ -4,7 +4,8 @@ import { Perfis, Usuario, UsuarioSessao } from '../auth/auth.decorators';
 import { ParticipacoesService } from './participacoes.service';
 
 @Controller()
-@Perfis('voluntario')
+// Gestores e administradores também podem se inscrever nas ações como voluntários.
+@Perfis('voluntario', 'gestor', 'administrador')
 export class ParticipacoesController {
   constructor(private readonly servico: ParticipacoesService) {}
 
@@ -26,7 +27,7 @@ export class ParticipacoesController {
   @Post('oportunidades/demanda/:idDemanda/participar')
   @HttpCode(200)
   participar(@Usuario() u: UsuarioSessao, @Param('idDemanda', ParseIntPipe) idDemanda: number) {
-    return this.servico.participar(u.id, idDemanda);
+    return this.servico.participar(u.id, idDemanda, u.perfil);
   }
 
   @Get('oportunidades/:id')

@@ -17,12 +17,15 @@ const MENUS = {
   gestor: [
     ['#/demandas', 'Demandas', 'bi-clipboard2-heart', 'Demandas'],
     ['#/demandas/nova', 'Nova demanda', 'bi-plus-circle', 'Nova'],
+    ['#/oportunidades', 'Oportunidades', 'bi-search-heart', 'Vagas'],
+    ['#/historico', 'Participações', 'bi-clock-history', 'Histórico'],
   ],
   administrador: [
     ['#/admin/painel', 'Painel', 'bi-speedometer2', 'Painel'],
     ['#/admin/relatorios', 'Relatórios', 'bi-file-earmark-bar-graph', 'Relatórios'],
     ['#/admin/usuarios', 'Usuários', 'bi-people', 'Usuários'],
     ['#/demandas', 'Demandas', 'bi-clipboard2-heart', 'Demandas'],
+    ['#/oportunidades', 'Vagas', 'bi-search-heart', 'Vagas'],
     ['#/admin/catalogos', 'Áreas e regiões', 'bi-diagram-3', 'Áreas'],
     ['#/admin/config', 'Configurações', 'bi-sliders', 'Config'],
   ],
@@ -72,14 +75,14 @@ function montar(u) {
   }
 
   mount(document.getElementById('topo'), html`
-    <nav class="nav-flutuante" aria-label="Navegação principal">
+    <nav class="nav-flutuante ${itens.length > 5 ? 'muitos' : ''}" aria-label="Navegação principal">
       ${marcaHtml()}
       <ul class="nav-links">
         ${itens.map(([link, rotulo, , , extra]) => html`<li><a href="${link}" data-rota="${link}" class="${extra === 'destaque' ? 'destaque' : ''}">${rotulo}${extra === 'notif' ? selo(state.naoLidas) : ''}</a></li>`)}
       </ul>
       <div class="nav-dir">
         ${botaoTema}
-        ${u ? html`<div class="chip-usuario"><span class="avatar" aria-hidden="true">${inicial}</span>
+        ${u ? html`<div class="chip-usuario" title="${u.nome} · ${PERFIS[u.perfil]}"><span class="avatar" aria-hidden="true">${inicial}</span>
             <span><strong>${u.nome}</strong><small>${PERFIS[u.perfil]}</small></span></div>
           <button type="button" class="btn-icone sair" data-sair aria-label="Sair"><i class="bi bi-box-arrow-right" aria-hidden="true"></i></button>` : ''}
       </div>

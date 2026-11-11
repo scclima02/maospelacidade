@@ -2,6 +2,8 @@
 
 *Plataforma de voluntariado comunitário.*
 
+Criado por **Samuel Canabarro**.
+
 Projeto Tecnológico em Desenvolvimento de Sistemas (ULBRA EAD): aplicação web para mobilizar
 voluntários em ações pontuais de uma organização comunitária. O cidadão se cadastra com áreas de interesse,
 disponibilidade e região; o gestor cadastra demandas; o sistema cruza perfis e demandas, notifica os

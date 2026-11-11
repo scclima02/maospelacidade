@@ -266,7 +266,38 @@ describe('Fluxo completo do sistema', () => {
     await bia.post(`/api/oportunidades/demanda/${dem.id}/participar`).expect(200); // idempotente
     const vols = (await gestor.get(`/api/demandas/${dem.id}/voluntarios`).expect(200)).body;
     expect(vols.find((v: any) => v.nome === 'Bia Lima')).toMatchObject({ situacao: 'confirmada', email: 'bia@teste.com' });
-    await gestor.post(`/api/oportunidades/demanda/${dem.id}/participar`).expect(403);
+    // Gestor e administrador também se inscrevem como voluntários
+    expect((await gestor.get('/api/oportunidades/explorar?escopo=todas').expect(200)).body.map((o: any) => o.idDemanda)).toContain(dem.id);
+    const doGestor = (await gestor.post(`/api/oportunidades/demanda/${dem.id}/participar`).expect(200)).body;
+    expect(doGestor.situacao).toBe('confirmada');
+    const doAdmin = (await admin.post(`/api/oportunidades/demanda/${dem.id}/participar`).expect(200)).body;
+    expect(doAdmin.situacao).toBe('confirmada');
+    expect((await gestor.get('/api/oportunidades').expect(200)).body.map((o: any) => o.idDemanda)).toContain(dem.id);
+    await admin.post(`/api/participacoes/${doAdmin.idParticipacao}/cancelar`).expect(200);
+    await gestor.get('/api/voluntarios/me/historico').expect(200);
+    await gestor.get('/api/voluntarios/me').expect(403);
+    const comEquipe = (await gestor.get(`/api/demandas/${dem.id}/voluntarios`).expect(200)).body;
+    const gestorInscrito = comEquipe.find((v: any) => v.nome === 'Gestora Teste');
+    expect(gestorInscrito).toMatchObject({ situacao: 'confirmada' });
+    await gestor.get(`/api/voluntarios/${gestorInscrito.idVoluntario}/resumo`).expect(200);
+
+    // Responsável não aprova uma inscrição (ex.: vagas esgotadas), o voluntário é avisado, e pode reconsiderar
+    const partBiaVitrine = insc.idParticipacao;
+    await gestor.post(`/api/demandas/${dem.id}/nao-aprovar`).send({ idParticipacao: partBiaVitrine, motivo: 'qualquer' }).expect(400);
+    await bia.post(`/api/demandas/${dem.id}/nao-aprovar`).send({ idParticipacao: partBiaVitrine, motivo: 'vagas' }).expect(403);
+    const aposNao = (await gestor.post(`/api/demandas/${dem.id}/nao-aprovar`)
+      .send({ idParticipacao: partBiaVitrine, motivo: 'vagas', mensagem: 'Obrigado!' }).expect(200)).body;
+    expect(aposNao.find((v: any) => v.nome === 'Bia Lima').situacao).toBe('nao_aprovada');
+    await gestor.post(`/api/demandas/${dem.id}/nao-aprovar`).send({ idParticipacao: partBiaVitrine, motivo: 'vagas' }).expect(422);
+    const avisoBia = (await bia.get('/api/notificacoes').expect(200)).body.find((n: any) => n.mensagem.includes('não foi aprovada'));
+    expect(avisoBia.mensagem).toContain('As vagas desta ação já foram preenchidas.');
+    expect(avisoBia.mensagem).toContain('Obrigado!');
+    expect((await bia.post(`/api/oportunidades/demanda/${dem.id}/participar`).expect(200)).body.situacao).toBe('nao_aprovada');
+    expect((await bia.get('/api/oportunidades').expect(200)).body.find((o: any) => o.idDemanda === dem.id).situacao).toBe('nao_aprovada');
+    await bia.post(`/api/participacoes/${partBiaVitrine}/cancelar`).expect(422);
+    const aposReconsiderar = (await gestor.post(`/api/demandas/${dem.id}/reconsiderar`).send({ idParticipacao: partBiaVitrine }).expect(200)).body;
+    expect(aposReconsiderar.find((v: any) => v.nome === 'Bia Lima').situacao).toBe('confirmada');
+    await gestor.post(`/api/demandas/${dem.id}/reconsiderar`).send({ idParticipacao: partBiaVitrine }).expect(422);
 
     // Admin cria, edita, cancela e exclui qualquer demanda
     const daAdmin = (await admin.post('/api/demandas').send({ ...corpo, titulo: 'Criada pelo admin' }).expect(201)).body.demanda;

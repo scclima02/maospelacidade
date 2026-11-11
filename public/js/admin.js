@@ -375,9 +375,9 @@ function cartaoCatalogo(ctx, tipo, titulo, singular) {
       mount(lista, alerta('danger', mensagensDe(e).join(' ')));
       return;
     }
-    mount(lista, itens.length ? html`<ul class="list-group">${itens.map((i) => html`<li class="list-group-item d-flex justify-content-between align-items-center gap-2">
+    mount(lista, itens.length ? html`<ul class="list-group">${itens.map((i) => html`<li class="list-group-item item-catalogo">
       <span class="${i.ativo ? '' : 'text-muted text-decoration-line-through'}">${i.nome} ${i.ativo ? '' : badge('inativo')}</span>
-      <span class="text-nowrap">
+      <span class="item-catalogo-acoes">
         <button type="button" class="btn btn-outline-primary btn-sm" data-editar="${i.id}">Renomear</button>
         <button type="button" class="btn btn-sm ${i.ativo ? 'btn-outline-warning' : 'btn-outline-success'}" data-alternar="${i.id}">${i.ativo ? 'Inativar' : 'Reativar'}</button>
         <button type="button" class="btn btn-outline-danger btn-sm" data-excluir="${i.id}" aria-label="Excluir ${i.nome}" title="Excluir"><i class="bi bi-trash" aria-hidden="true"></i></button>

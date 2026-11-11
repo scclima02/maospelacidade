@@ -77,6 +77,7 @@ export class VoluntariosController {
   }
 
   @Get('historico')
+  @Perfis('voluntario', 'gestor', 'administrador')
   historico(@Usuario() u: UsuarioSessao) {
     return this.servico.historico(u.id);
   }

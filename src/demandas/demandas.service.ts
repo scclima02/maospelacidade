@@ -61,6 +61,13 @@ const BASE_DEMANDA = `
   JOIN regiao r ON r.id_regiao = d.id_regiao
   JOIN usuario ug ON ug.id_usuario = d.id_gestor`;
 
+// Motivos de não aprovação e o texto enviado ao voluntário (o histórico não é exposto em detalhe).
+const MOTIVOS_NAO_APROVACAO = {
+  vagas: 'As vagas desta ação já foram preenchidas.',
+  perfil: 'O responsável optou por outros voluntários para esta ação.',
+  outro: '',
+} as const;
+
 @Injectable()
 export class DemandasService {
   constructor(
@@ -201,7 +208,7 @@ export class DemandasService {
               (SELECT COUNT(*)::int FROM participacao p WHERE p.id_voluntario = u.id_usuario AND p.situacao = 'compareceu') AS participacoes,
               (SELECT COALESCE(SUM(p.horas_realizadas), 0)::float8 FROM participacao p WHERE p.id_voluntario = u.id_usuario AND p.situacao = 'compareceu') AS horas,
               (SELECT COUNT(*)::int FROM participacao p WHERE p.id_voluntario = u.id_usuario AND p.situacao = 'faltou') AS faltas
-       FROM usuario u WHERE u.id_usuario = $1 AND u.perfil = 'voluntario'`,
+       FROM usuario u WHERE u.id_usuario = $1 AND EXISTS (SELECT 1 FROM voluntario v WHERE v.id_usuario = u.id_usuario)`,
       [idVoluntario],
     );
     if (!v) throw new NotFoundException('Voluntário não encontrado.');
@@ -514,6 +521,68 @@ export class DemandasService {
         [idParticipacao, id],
       );
       if (!r.length) throw new UnprocessableEntityException('Participação não está selecionada nesta demanda.');
+    });
+    return this.voluntarios(id);
+  }
+
+  /**
+   * O responsável não aprova uma inscrição (vagas esgotadas, histórico de faltas etc.).
+   * Vale para quem está sugerido, confirmado ou selecionado; a vaga é liberada e o voluntário é avisado.
+   */
+  async naoAprovar(u: UsuarioSessao, id: number, body: unknown) {
+    const v = new Validador(body);
+    const idParticipacao = v.inteiro('idParticipacao', 'Participação');
+    const motivo = v.texto('motivo', 'Motivo', { max: 20 });
+    const mensagem = v.texto('mensagem', 'Mensagem ao voluntário', { max: 500, opcional: true });
+    if (motivo && !(motivo in MOTIVOS_NAO_APROVACAO)) v.erro('Motivo inválido.');
+    v.concluir();
+
+    const aviso = await this.db.tx(async (tx) => {
+      const d = await this.carregarDoDono(tx, id, u);
+      if (d.situacao !== 'aberta') throw new UnprocessableEntityException('A demanda não está aberta.');
+      const [p] = await tx.query(
+        `UPDATE participacao p SET situacao = 'nao_aprovada', data_atualizacao = now()
+         FROM usuario x
+         WHERE p.id_participacao = $1 AND p.id_demanda = $2 AND p.situacao IN ('sugerida','confirmada','selecionada')
+           AND x.id_usuario = p.id_voluntario
+         RETURNING x.id_usuario AS "idUsuario", x.email`,
+        [idParticipacao, id],
+      );
+      if (!p) throw new UnprocessableEntityException('Só é possível não aprovar inscrições sugeridas, confirmadas ou selecionadas.');
+      const partes = [
+        `Sua inscrição na ação "${d.titulo}" não foi aprovada desta vez.`,
+        MOTIVOS_NAO_APROVACAO[motivo as keyof typeof MOTIVOS_NAO_APROVACAO],
+        mensagem ? `Mensagem do responsável: ${mensagem}` : '',
+        'Obrigado pelo interesse! Confira outras oportunidades na plataforma.',
+      ];
+      return {
+        idUsuario: p.idUsuario,
+        email: p.email,
+        idDemanda: id,
+        tipo: 'outro',
+        assunto: `Inscrição não aprovada: ${d.titulo}`,
+        mensagem: partes.filter(Boolean).join(' '),
+        rota: `/oportunidades/${idParticipacao}`,
+      } as NovaNotificacao;
+    });
+    await this.notificacoes.notificar([aviso]);
+    return this.voluntarios(id);
+  }
+
+  /** Desfaz a não aprovação: a inscrição volta a "confirmada". */
+  async reconsiderar(u: UsuarioSessao, id: number, body: unknown) {
+    const v = new Validador(body);
+    const idParticipacao = v.inteiro('idParticipacao', 'Participação');
+    v.concluir();
+    await this.db.tx(async (tx) => {
+      const d = await this.carregarDoDono(tx, id, u);
+      if (d.situacao !== 'aberta') throw new UnprocessableEntityException('A demanda não está aberta.');
+      const r = await tx.query(
+        `UPDATE participacao SET situacao = 'confirmada', data_atualizacao = now()
+         WHERE id_participacao = $1 AND id_demanda = $2 AND situacao = 'nao_aprovada' RETURNING id_participacao`,
+        [idParticipacao, id],
+      );
+      if (!r.length) throw new UnprocessableEntityException('Esta inscrição não está como "não aprovada".');
     });
     return this.voluntarios(id);
   }

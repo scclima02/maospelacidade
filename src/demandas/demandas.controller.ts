@@ -61,6 +61,18 @@ export class DemandasController {
     return this.servico.desselecionar(u, id, body);
   }
 
+  @Post('demandas/:id/nao-aprovar')
+  @HttpCode(200)
+  naoAprovar(@Usuario() u: UsuarioSessao, @Param('id', ParseIntPipe) id: number, @Body() body: unknown) {
+    return this.servico.naoAprovar(u, id, body);
+  }
+
+  @Post('demandas/:id/reconsiderar')
+  @HttpCode(200)
+  reconsiderar(@Usuario() u: UsuarioSessao, @Param('id', ParseIntPipe) id: number, @Body() body: unknown) {
+    return this.servico.reconsiderar(u, id, body);
+  }
+
   @Post('demandas/:id/presencas')
   @HttpCode(200)
   presencas(@Usuario() u: UsuarioSessao, @Param('id', ParseIntPipe) id: number, @Body() body: unknown) {

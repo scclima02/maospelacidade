@@ -95,6 +95,7 @@ const SITUACOES = {
   compareceu: ['success', 'Compareceu'],
   faltou: ['danger', 'Faltou'],
   cancelada: ['secondary', 'Cancelada'],
+  nao_aprovada: ['danger', 'Não aprovada'],
   aberta: ['success', 'Aberta'],
   concluida: ['primary', 'Concluída'],
   ativo: ['success', 'Ativo'],
